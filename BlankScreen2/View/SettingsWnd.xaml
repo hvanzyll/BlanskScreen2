@@ -1,0 +1,89 @@
+﻿<Window x:Class="BlankScreen2.View.SettingsWnd"
+				xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+				xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+				xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+				xmlns:system="clr-namespace:System;assembly=mscorlib"
+				xmlns:local="clr-namespace:BlankScreen2"
+				xmlns:model="clr-namespace:BlankScreen2.Model"
+				mc:Ignorable="d"
+				Title="Blank Screen Settings"  SizeToContent="Height" Width="375">
+	<Window.Resources>
+		<ObjectDataProvider x:Key="dataFromEnum" MethodName="GetValues"
+														ObjectType="{x:Type system:Enum}">
+			<ObjectDataProvider.MethodParameters>
+				<x:Type TypeName="model:Location" />
+			</ObjectDataProvider.MethodParameters>
+		</ObjectDataProvider>
+	</Window.Resources>
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<DataGrid  Grid.Column="0" x:Name="Screens" Grid.Row="0"  AutoGenerateColumns="False" Margin="2"
+								ItemsSource="{Binding DisplayEntries}" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False" SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False">
+			<DataGrid.Columns>
+				<DataGridTemplateColumn Header="Blank">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<CheckBox IsChecked="{Binding Enabled,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+
+				<DataGridTemplateColumn Width="*" Header="Displays">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding DisplayName}" TextWrapping="Wrap" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+			</DataGrid.Columns>
+		</DataGrid>
+
+		<StackPanel Grid.Column="1">
+			<GroupBox Header="Click Screen Show">
+				<StackPanel>
+					<CheckBox Content="Hide Windows Volume" IsChecked="{Binding HideWindowsVolume}" />
+					<CheckBox Content="Show Device" IsChecked="{Binding ShowDevice}" />
+					<CheckBox Content="Show Time" IsChecked="{Binding ShowTime}" />
+					<CheckBox Content="Show Volume" IsChecked="{Binding ShowVolume}" />
+				</StackPanel>
+			</GroupBox>
+			<GroupBox Header="Display Location">
+				<ComboBox ItemsSource="{Binding Source={StaticResource dataFromEnum}}"
+									SelectedItem="{Binding Location}" />
+			</GroupBox>
+			<GroupBox Header="Start/Exit">
+				<StackPanel>
+					<CheckBox Content="Blank Screen on Start" IsChecked="{Binding BlankScreenOnStart}" />
+					<CheckBox Content="Exit on Clear" IsChecked="{Binding ExitOnClear}" />
+					<CheckBox IsChecked="{Binding ShowClickScreenOnStart}">
+						<TextBlock>
+							<Run Text="Show Click Screen" />
+							<LineBreak />
+							<Run Text="Selection on Start" />
+						</TextBlock>
+					</CheckBox>
+				</StackPanel>
+			</GroupBox>
+		</StackPanel>
+
+		<Grid Grid.Row="1" Grid.ColumnSpan="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<Button  x:Name="RefreshDisplays" Grid.Column="0" Content="Refresh Displays"  Padding="5" Margin="2"
+								Click="RefreshDisplays_Click" />
+			<Button x:Name="BlanksScreen" Grid.Column="3" Content="Blanks Screen"  Padding="5" Margin="2" Click="BlanksScreen_Click" />
+		</Grid>
+	</Grid>
+</Window>
