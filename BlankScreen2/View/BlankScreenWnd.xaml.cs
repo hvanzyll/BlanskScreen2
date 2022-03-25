@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,25 +24,36 @@ namespace BlankScreen2.View
 	/// </summary>
 	public sealed partial class BlankScreenWnd : Window
 	{
-		private ScreenMgr _ScreenMgr;
-		private int _DisplayOffset;
-		private DispatcherTimer? _Timer;
+		private BlankScreenModel _BlankScreenModel;
+		private DispatcherTimer? _MousePointerTimer;
+		private DispatcherTimer? _ShowDetailsTimer;
+		private DispatcherTimer? _ClockTickTimer;
 		private Point? _MouseLastPos;
 
-		public BlankScreenWnd(ScreenMgr screenMgr, int displayOffset)
+		public BlankScreenWnd(BlankScreenModel blankScreenModel)
 		{
-			_ScreenMgr = screenMgr;
-			_DisplayOffset = displayOffset;
+			_BlankScreenModel = blankScreenModel;
 			InitializeComponent();
+			this.DataContext = _BlankScreenModel;
+			_BlankScreenModel.PropertyChanged += _BlankScreenModel_PropertyChanged;
+		}
+
+		private void _BlankScreenModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Volume")
+				ShowDeails();
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			DisplayEntry displayEntry = GetDisplayEntry();
+			DisplayEntry displayEntry = _BlankScreenModel.DisplayEntry;
 			this.Height = displayEntry.WpfBounds.Height;
 			this.Width = displayEntry.WpfBounds.Width;
 			this.Top = displayEntry.WpfBounds.Top;
 			this.Left = displayEntry.WpfBounds.Left;
+
+			if (_BlankScreenModel.ShowClickScreenOnStart)
+				ShowDeails();
 		}
 
 		private void Window_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -51,14 +64,14 @@ namespace BlankScreen2.View
 			cm.IsOpen = true;
 		}
 
-		private MenuItem CreateMenu(string strHeader, RoutedEventHandler REH = null, bool bIsChecked = false)
+		private static MenuItem CreateMenu(string strHeader, RoutedEventHandler reh, bool bIsChecked = false)
 		{
 			MenuItem mi = new MenuItem
 			{
 				Header = strHeader
 			};
-			if (REH != null)
-				mi.Click += REH;
+			if (reh != null)
+				mi.Click += reh;
 
 			mi.IsChecked = bIsChecked;
 
@@ -72,12 +85,13 @@ namespace BlankScreen2.View
 
 		private void MenuItem_ShowSettingsClick(object sender, RoutedEventArgs e)
 		{
-			_ScreenMgr.Settings.ShowSettings = true;
+			_BlankScreenModel.ShowSettings = true;
 			this.Close();
 		}
 
 		private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
 		{
+			ShowDeails();
 		}
 
 		private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -85,28 +99,27 @@ namespace BlankScreen2.View
 			this.Close();
 		}
 
-		private DisplayEntry GetDisplayEntry()
-		{
-			return _ScreenMgr.Settings.DisplayEntries[_DisplayOffset];
-		}
-
 		private void Window_MouseMove(object sender, MouseEventArgs e)
 		{
 			Point mousePos = e.GetPosition(this);
 			if (MouseMoved(mousePos) == true)
 			{
-				if (_Timer != null)
-					_Timer.Stop();
-				_Timer = new DispatcherTimer();
-				_Timer.Interval = TimeSpan.FromSeconds(5);
-				_Timer.Tick += _Timer_Tick; ;
-				_Timer.Start();
+				StartTimer(ref _MousePointerTimer, 5, MousePointerTimer_Tick);
 
 				ShowMouse(true);
 			}
 		}
 
-		private void _Timer_Tick(object? sender, EventArgs e)
+		private void StartTimer(ref DispatcherTimer? dispatcherTimer, int intervalSec, EventHandler eventHandler)
+		{
+			dispatcherTimer?.Stop();
+			dispatcherTimer = new DispatcherTimer();
+			dispatcherTimer.Interval = TimeSpan.FromSeconds(intervalSec);
+			dispatcherTimer.Tick += eventHandler;
+			dispatcherTimer.Start();
+		}
+
+		private void MousePointerTimer_Tick(object? sender, EventArgs e)
 		{
 			if (!(sender is DispatcherTimer dispatcherTimer))
 				return;
@@ -141,6 +154,52 @@ namespace BlankScreen2.View
 				this.Cursor = null;
 			else
 				this.Cursor = Cursors.None;
+		}
+
+		private void ShowDeails()
+		{
+			if (Thread.CurrentThread != Dispatcher.Thread)
+			{
+				this.Dispatcher.Invoke(new Action(() => ShowDeails()));
+				return;
+			}
+
+			_BlankScreenModel.ShowDetails = true;
+			_BlankScreenModel.Tick();
+
+			StartTimer(ref _ShowDetailsTimer, 5, _ShowDetailsTimer_Tick);
+			StartTimer(ref _ClockTickTimer, 1, _ClockTickTimer_Tick);
+
+			//_ShowDetailsTimer?.Stop();
+			//_ShowDetailsTimer = new DispatcherTimer();
+			//_ShowDetailsTimer.Interval = TimeSpan.FromSeconds(5);
+			//_ShowDetailsTimer.Tick += _ShowDetailsTimer_Tick;
+			//_ShowDetailsTimer.Start();
+
+			//_ClockTickTimer?.Stop();
+			//_ClockTickTimer = new DispatcherTimer();
+			//_ClockTickTimer.Interval = TimeSpan.FromSeconds(1);
+			//_ClockTickTimer.Tick += _ClockTickTimer_Tick;
+			//_ClockTickTimer.Start();
+		}
+
+		private void _ClockTickTimer_Tick(object? sender, EventArgs e)
+		{
+			_BlankScreenModel.Tick();
+		}
+
+		private void _ShowDetailsTimer_Tick(object? sender, EventArgs e)
+		{
+			if (_ShowDetailsTimer == null)
+				return;
+
+			_ShowDetailsTimer.Stop();
+			_ShowDetailsTimer = null;
+
+			_ClockTickTimer?.Stop();
+			_ClockTickTimer = null;
+
+			_BlankScreenModel.ShowDetails = false;
 		}
 	}
 }

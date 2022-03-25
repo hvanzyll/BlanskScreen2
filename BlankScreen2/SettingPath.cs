@@ -91,7 +91,7 @@ namespace BlankScreen2
 			{
 				string settingsPath = SettingPath.GetSettingFilePath(fileNameNoExt);
 				string json = File.ReadAllText(settingsPath);
-				T settings = JsonConvert.DeserializeObject<T>(json);
+				T? settings = JsonConvert.DeserializeObject<T>(json);
 				return settings;
 			}
 			catch (Exception ex)

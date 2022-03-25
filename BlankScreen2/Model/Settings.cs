@@ -35,9 +35,6 @@ namespace BlankScreen2.Model
 		public bool ExitOnClear { get => _ExitOnClear; set => SetField(ref _ExitOnClear, value); }
 		public bool ShowClickScreenOnStart { get => _ShowClickScreenOnStart; set => SetField(ref _ShowClickScreenOnStart, value); }
 		public DisplayEntries DisplayEntries { get => _DisplayEntries; set => SetField(ref _DisplayEntries, value); }
-
-		[JsonIgnore]
-		public bool ShowSettings { get; set; }
 	}
 
 	public enum Location
@@ -95,9 +92,11 @@ namespace BlankScreen2.Model
 			get
 			{
 				StringBuilder sb = new();
-
-				int pos = DeviceName.LastIndexOf('\\') + 1;
-				sb.Append(DeviceName.Substring(pos));
+				if (!string.IsNullOrEmpty(DeviceName))
+				{
+					int pos = DeviceName.LastIndexOf('\\') + 1;
+					sb.Append(DeviceName[pos..]);
+				}
 				sb.Append(" ");
 				sb.Append(WpfBounds.Width);
 				sb.Append("x");
@@ -121,8 +120,14 @@ namespace BlankScreen2.Model
 			if (EqualityComparer<T>.Default.Equals(field, value))
 				return false;
 			field = value;
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+			NotifyPropertyChanges(propertyName);
 			return true;
+		}
+
+		protected void NotifyPropertyChanges([CallerMemberName] string propertyName = "")
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 	}
 }

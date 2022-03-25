@@ -15,14 +15,19 @@ namespace BlankScreen2.ViewModel
 	public sealed class ScreenMgr
 	{
 		private Settings _Settings;
+		private AudioMgr _AudioMgr;
 		private SettingsWnd? _SettingsWnd;
 		private List<BlankScreenWnd> _BlankScreenWnds = new List<BlankScreenWnd>();
+		public bool ShowSettings { get; set; }
 
 		public Settings Settings { get => _Settings; set => _Settings = value; }
 
 		public ScreenMgr()
 		{
 			_Settings = SettingPath.LoadSettings<Settings>("settings");
+
+			AudioModel audioModel = new();
+			_AudioMgr = new(audioModel);
 		}
 
 		public void RefreshDisplays()
@@ -45,10 +50,10 @@ namespace BlankScreen2.ViewModel
 				return;
 			}
 
-			ShowSettings();
+			ShowSettingsWnd();
 		}
 
-		public void ShowSettings()
+		public void ShowSettingsWnd()
 		{
 			_SettingsWnd = new(this);
 			_SettingsWnd.Closing += _SettingsWnd_Closing;
@@ -65,14 +70,15 @@ namespace BlankScreen2.ViewModel
 
 		public void ShowBlankScreen()
 		{
-			_Settings.ShowSettings = false;
+			ShowSettings = false;
 
 			for (int displayIndex = 0; displayIndex < _Settings.DisplayEntries.Count; displayIndex++)
 			{
 				DisplayEntry displayEntry = Settings.DisplayEntries[displayIndex];
 				if (displayEntry.Enabled)
 				{
-					BlankScreenWnd blankScreenWnd = new BlankScreenWnd(this, displayIndex);
+					BlankScreenModel blankScreenModel = new BlankScreenModel(this, displayIndex, _AudioMgr.AudioModel);
+					BlankScreenWnd blankScreenWnd = new BlankScreenWnd(blankScreenModel);
 					_BlankScreenWnds.Add(blankScreenWnd);
 					blankScreenWnd.Closing += BlankScreenWnd_Closing;
 					blankScreenWnd.Show();
@@ -82,8 +88,8 @@ namespace BlankScreen2.ViewModel
 
 		private void BlankScreenWnd_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
 		{
-			if (!_Settings.ExitOnClear || _Settings.ShowSettings)
-				ShowSettings();
+			if (!_Settings.ExitOnClear || ShowSettings)
+				ShowSettingsWnd();
 
 			if (sender is BlankScreenWnd blankScreenWnd)
 				_BlankScreenWnds.Remove(blankScreenWnd);

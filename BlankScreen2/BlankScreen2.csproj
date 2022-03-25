@@ -18,4 +18,8 @@
     <PackageReference Include="WpfScreenHelper" Version="2.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CoreAudioApi\CoreAudioApi.csproj" />
+  </ItemGroup>
+
 </Project>
