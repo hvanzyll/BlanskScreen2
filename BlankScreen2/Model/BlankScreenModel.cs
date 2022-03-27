@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BlankScreen2.ViewModel;
+using BlankScreen2.Helpers;
 
 namespace BlankScreen2.Model
 {
@@ -15,21 +10,25 @@ namespace BlankScreen2.Model
 		private readonly AudioModel _AudioModel;
 		private bool _ShowDetails;
 
-		public bool ShowDevice { get => _ScreenMgr.Settings.ShowDevice; }
-		public bool ShowTime { get => _ScreenMgr.Settings.ShowTime; }
-		public bool ShowVolume { get => _ScreenMgr.Settings.ShowVolume; }
-		public Location Location { get => _ScreenMgr.Settings.Location; }
-		public bool ShowClickScreenOnStart { get => _ScreenMgr.Settings.ShowClickScreenOnStart; }
+		public bool ShowDevice { get => ScreenMgr.Settings.ShowDevice; }
+		public bool ShowTime { get => ScreenMgr.Settings.ShowTime; }
+		public bool ShowVolume { get => ScreenMgr.Settings.ShowVolume; }
+		public Location Location { get => ScreenMgr.Settings.Location; }
+		public bool ShowClickScreenOnStart { get => ScreenMgr.Settings.ShowClickScreenOnStart; }
 		public int Volume { get => _AudioModel.Volume; }
 		public string DisplayName { get => DisplayEntry.DisplayName; }
 
 		public DateTime DateTimeNow { get => DateTime.Now; }
 
-		public DisplayEntry DisplayEntry { get => _ScreenMgr.Settings.DisplayEntries[_DisplayOffset]; }
+		public DisplayEntry DisplayEntry { get => ScreenMgr.Settings.DisplayEntries[_DisplayOffset]; }
+
+		public DisplayEntries DisplayEntries { get => ScreenMgr.Settings.DisplayEntries; }
 		public bool ShowDetails { get => _ShowDetails; set => SetField(ref _ShowDetails, value); }
 
 		public bool ShowSettings
-		{ get => _ScreenMgr.ShowSettings; set { _ScreenMgr.ShowSettings = value; } }
+		{ get => ScreenMgr.ShowSettings; set { ScreenMgr.ShowSettings = value; } }
+
+		public ScreenMgr ScreenMgr => _ScreenMgr;
 
 		public BlankScreenModel(ScreenMgr screenMgr, int displayOffset, AudioModel audioModel)
 		{

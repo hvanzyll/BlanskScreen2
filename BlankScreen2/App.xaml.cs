@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using BlankScreen2.Model;
-using BlankScreen2.ViewModel;
+﻿using System.Windows;
+using BlankScreen2.Helpers;
 
 namespace BlankScreen2
 {

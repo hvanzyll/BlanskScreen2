@@ -1,21 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using BlankScreen2.Model;
-using BlankScreen2.ViewModel;
 
 namespace BlankScreen2.View
 {
@@ -60,6 +50,14 @@ namespace BlankScreen2.View
 		{
 			ContextMenu cm = new ContextMenu();
 			cm.Items.Add(CreateMenu("Show Settings", MenuItem_ShowSettingsClick));
+
+			cm.Items.Add(new Separator());
+			foreach (DisplayEntry displayEntry in _BlankScreenModel.DisplayEntries)
+			{
+				cm.Items.Add(CreateMenu(displayEntry.DisplayName, MenuItem_ShowHideScreen, displayEntry.Enabled));
+			}
+
+			cm.Items.Add(new Separator());
 			cm.Items.Add(CreateMenu("Exit", MenuItem_ExitClick));
 			cm.IsOpen = true;
 		}
@@ -87,6 +85,20 @@ namespace BlankScreen2.View
 		{
 			_BlankScreenModel.ShowSettings = true;
 			this.Close();
+		}
+
+		private void MenuItem_ShowHideScreen(object sender, RoutedEventArgs e)
+		{
+			if (!(sender is MenuItem menuItem))
+				return;
+
+			if (!(menuItem.Header is string header))
+				return;
+
+			DisplayEntry displayEntry = _BlankScreenModel.DisplayEntries.FindByDisplayName(header);
+
+			_BlankScreenModel.ScreenMgr.ShowHideBlankScreen(displayEntry);
+			return;
 		}
 
 		private void Window_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -169,18 +181,6 @@ namespace BlankScreen2.View
 
 			StartTimer(ref _ShowDetailsTimer, 5, _ShowDetailsTimer_Tick);
 			StartTimer(ref _ClockTickTimer, 1, _ClockTickTimer_Tick);
-
-			//_ShowDetailsTimer?.Stop();
-			//_ShowDetailsTimer = new DispatcherTimer();
-			//_ShowDetailsTimer.Interval = TimeSpan.FromSeconds(5);
-			//_ShowDetailsTimer.Tick += _ShowDetailsTimer_Tick;
-			//_ShowDetailsTimer.Start();
-
-			//_ClockTickTimer?.Stop();
-			//_ClockTickTimer = new DispatcherTimer();
-			//_ClockTickTimer.Interval = TimeSpan.FromSeconds(1);
-			//_ClockTickTimer.Tick += _ClockTickTimer_Tick;
-			//_ClockTickTimer.Start();
 		}
 
 		private void _ClockTickTimer_Tick(object? sender, EventArgs e)

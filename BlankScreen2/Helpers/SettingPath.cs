@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
 
-namespace BlankScreen2
+namespace BlankScreen2.Helpers
 {
 	public static class SettingPath
 	{

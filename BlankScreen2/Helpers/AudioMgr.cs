@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using BlankScreen2.Model;
 using CoreAudioApi;
 
-namespace BlankScreen2.ViewModel
+namespace BlankScreen2.Helpers
 {
 	internal class AudioMgr
 	{
 		private MMDevice _MMDevice;
 		private readonly AudioModel _AudioModel;
+		private HideWindowsVolume _HideWindowsVolume;
 
 		public AudioModel AudioModel => _AudioModel;
 
@@ -26,6 +22,17 @@ namespace BlankScreen2.ViewModel
 		public void UpdateVolume()
 		{
 			AudioModel.Volume = GetVolume();
+		}
+
+		public void HideWindowsVolume(bool hideWindowsVolume)
+		{
+			if (_HideWindowsVolume == null)
+				_HideWindowsVolume = new HideWindowsVolume();
+
+			if (hideWindowsVolume)
+				_HideWindowsVolume.HideOSD();
+			else
+				_HideWindowsVolume.ShowOSD();
 		}
 
 		private void InitMMDevice()

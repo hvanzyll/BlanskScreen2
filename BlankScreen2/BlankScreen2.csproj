@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.22000.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <Company>hvanzyll</Company>
@@ -11,7 +11,14 @@
     <Description>Blanks the screen for specified displays</Description>
     <NeutralLanguage>en</NeutralLanguage>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <ApplicationIcon>MainIcon.ico</ApplicationIcon>
+    <SignAssembly>False</SignAssembly>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="MainIcon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -20,6 +27,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoreAudioApi\CoreAudioApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModel\" />
   </ItemGroup>
 
 </Project>
