@@ -85,7 +85,7 @@ namespace BlankScreen2.Helpers
 			return strFilePath;
 		}
 
-		public static T LoadSettings<T>(string fileNameNoExt)
+		public static T? LoadSettings<T>(string fileNameNoExt)
 		{
 			try
 			{
@@ -97,16 +97,18 @@ namespace BlankScreen2.Helpers
 			catch (Exception ex)
 			{
 				Debug.WriteLine(ex.ToString());
-				T settings = (T)Activator.CreateInstance(typeof(T), new object[] { });
+				T? settings = (T?)Activator.CreateInstance(typeof(T), new object[] { });
 				SaveSettings<T>(fileNameNoExt, settings);
 				return settings;
 			}
 		}
 
-		public static void SaveSettings<T>(string fileNameNoExt, T settings)
+		public static void SaveSettings<T>(string fileNameNoExt, T? settings)
 		{
-			string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
+			if (settings == null)
+				return;
 
+			string json = JsonConvert.SerializeObject(settings, Formatting.Indented);
 			string settingsPath = SettingPath.GetSettingFilePath(fileNameNoExt);
 			File.WriteAllText(settingsPath, json);
 		}

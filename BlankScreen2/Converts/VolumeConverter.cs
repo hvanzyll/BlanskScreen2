@@ -11,7 +11,7 @@ namespace BlankScreen2.Converts
 			if (!(value is int volume))
 				return "Error";
 
-			return $"Volume:{volume}";
+			return $"Volume: {volume}";
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

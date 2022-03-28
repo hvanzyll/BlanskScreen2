@@ -10,7 +10,7 @@ namespace BlankScreen2.Converts
 			if (!(value is DateTime dateTime))
 				return string.Empty;
 
-			return dateTime.ToString("HH:mm:ss tt");
+			return dateTime.ToString("hh:mm:ss tt");
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

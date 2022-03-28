@@ -5,9 +5,9 @@ namespace BlankScreen2.Model
 {
 	public sealed class DisplayEntries : ObservableCollection<DisplayEntry>
 	{
-		public DisplayEntry FindByDisplayName(string displayName)
+		public DisplayEntry? FindByDisplayName(string displayName)
 		{
-			return this.First(de => de.DisplayName == displayName);
+			return this.FirstOrDefault(de => de.DisplayName == displayName);
 		}
 
 		public int GetDisplayIndex(DisplayEntry displayEntry)
@@ -22,7 +22,7 @@ namespace BlankScreen2.Model
 
 		public void ClearAllNonRefreshed()
 		{
-			DisplayEntry deFound = this.FirstOrDefault(de => !de.Refreshed);
+			DisplayEntry? deFound = this.FirstOrDefault(de => !de.Refreshed);
 			if (deFound != null)
 			{
 				this.Remove(deFound);

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace BlankScreen2.Model
 {
@@ -13,6 +14,7 @@ namespace BlankScreen2.Model
 		private bool _BlankScreenOnStart;
 		private bool _ExitOnClear;
 		private bool _ShowClickScreenOnStart;
+		private readonly AudioModel _AudioModel = new AudioModel();
 
 		public bool HideWindowsVolume { get => _HideWindowsVolume; set => SetField(ref _HideWindowsVolume, value); }
 		public bool ShowDevice { get => _ShowDevice; set => SetField(ref _ShowDevice, value); }
@@ -23,6 +25,9 @@ namespace BlankScreen2.Model
 		public bool ExitOnClear { get => _ExitOnClear; set => SetField(ref _ExitOnClear, value); }
 		public bool ShowClickScreenOnStart { get => _ShowClickScreenOnStart; set => SetField(ref _ShowClickScreenOnStart, value); }
 		public DisplayEntries DisplayEntries { get => _DisplayEntries; set => SetField(ref _DisplayEntries, value); }
+
+		[JsonIgnore]
+		public AudioModel AudioModel => _AudioModel;
 	}
 
 	public enum Location

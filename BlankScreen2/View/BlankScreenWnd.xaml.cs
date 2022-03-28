@@ -95,9 +95,10 @@ namespace BlankScreen2.View
 			if (!(menuItem.Header is string header))
 				return;
 
-			DisplayEntry displayEntry = _BlankScreenModel.DisplayEntries.FindByDisplayName(header);
+			DisplayEntry? displayEntry = _BlankScreenModel.DisplayEntries.FindByDisplayName(header);
+			if (displayEntry != null)
+				_BlankScreenModel.ScreenMgr.ShowHideBlankScreen(displayEntry);
 
-			_BlankScreenModel.ScreenMgr.ShowHideBlankScreen(displayEntry);
 			return;
 		}
 

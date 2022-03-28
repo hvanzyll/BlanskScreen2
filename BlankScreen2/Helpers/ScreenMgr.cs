@@ -18,10 +18,23 @@ namespace BlankScreen2.Helpers
 
 		public ScreenMgr()
 		{
-			_Settings = SettingPath.LoadSettings<Settings>("settings");
+			_Settings = LoadSettings();
 
-			AudioModel audioModel = new();
-			_AudioMgr = new(audioModel);
+			_AudioMgr = new AudioMgr();
+			_AudioMgr.VolumeUpdatedEvent += _AudioMgr_VolumeUpdatedEvent;
+		}
+
+		private Settings LoadSettings()
+		{
+			Settings? settings = SettingPath.LoadSettings<Settings>("settings");
+			if (settings == null)
+				settings = new Settings();
+			return settings;
+		}
+
+		private void _AudioMgr_VolumeUpdatedEvent(object? sender, VolumeUpdatedEventArgs e)
+		{
+			_Settings.AudioModel.Volume = e.Volume;
 		}
 
 		public void RefreshDisplays()
@@ -30,7 +43,7 @@ namespace BlankScreen2.Helpers
 
 			foreach (Screen screen in screens)
 			{
-				DisplayEntry displayEntryFound = Settings.DisplayEntries.FirstOrDefault(de => de.DeviceName == screen.DeviceName);
+				DisplayEntry? displayEntryFound = Settings.DisplayEntries.FindByDisplayName(screen.DeviceName);
 				if (displayEntryFound == null)
 				{
 					DisplayEntry displayEntry = new DisplayEntry(screen);
@@ -89,7 +102,7 @@ namespace BlankScreen2.Helpers
 		{
 			if (displayEntry.Enabled)
 			{
-				WndEntry wndEntry = _BlankScreenWnds.FirstOrDefault(entry => entry.DisplayEntry == displayEntry);
+				WndEntry? wndEntry = _BlankScreenWnds.FirstOrDefault(entry => entry.DisplayEntry == displayEntry);
 				if (wndEntry == null)
 					return;
 
@@ -119,7 +132,7 @@ namespace BlankScreen2.Helpers
 
 		private void ShowBlackScreen(int displayIndex)
 		{
-			BlankScreenModel blankScreenModel = new BlankScreenModel(this, displayIndex, _AudioMgr.AudioModel);
+			BlankScreenModel blankScreenModel = new BlankScreenModel(this, displayIndex, _Settings.AudioModel);
 			BlankScreenWnd blankScreenWnd = new BlankScreenWnd(blankScreenModel);
 			_BlankScreenWnds.Add(new WndEntry(blankScreenWnd, blankScreenModel.DisplayEntry));
 			blankScreenWnd.Closing += BlankScreenWnd_Closing;
@@ -134,7 +147,7 @@ namespace BlankScreen2.Helpers
 			if (_Settings.HideWindowsVolume)
 				_AudioMgr.HideWindowsVolume(false);
 
-			WndEntry wndEntry = _BlankScreenWnds.FirstOrDefault(entry => entry.BlankScreenWnd == sender);
+			WndEntry? wndEntry = _BlankScreenWnds.FirstOrDefault(entry => entry.BlankScreenWnd == sender);
 			if (wndEntry != null)
 				_BlankScreenWnds.Remove(wndEntry);
 

@@ -39,7 +39,7 @@ namespace BlankScreen2.Helpers
 				keybd_event((byte)VOLUME_UP_KEY, (byte)0, 0U, 0);
 				keybd_event((byte)VOLUME_DOWN_KEY, (byte)0, 0U, 0);
 				this.hWndInject = FindOSDWindow(true);
-				Thread.Sleep(1000 * (index ^ 2));
+				Thread.Sleep(500);
 			}
 		}
 
@@ -86,8 +86,6 @@ namespace BlankScreen2.Helpers
 				if (!IsWindow(this.hWndInject))
 					this.Init();
 				ShowWindow(this.hWndInject, SW_RESTORE);
-				keybd_event((byte)VOLUME_UP_KEY, (byte)0, 0U, 0);
-				keybd_event((byte)VOLUME_DOWN_KEY, (byte)0, 0U, 0);
 			});
 		}
 	}
