@@ -2,7 +2,7 @@
 
 namespace BlankScreen2.Model
 {
-	internal class WndEntry
+	internal sealed class WndEntry
 	{
 		public BlankScreenWnd BlankScreenWnd { get; }
 		public DisplayEntry DisplayEntry { get; }

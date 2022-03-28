@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace BlankScreen2.Helpers
 {
-	public class HideWindowsVolume
+	public sealed class HideWindowsVolume
 	{
 		private IntPtr hWndInject = IntPtr.Zero;
 

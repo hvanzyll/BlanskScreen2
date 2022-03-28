@@ -132,6 +132,25 @@ namespace BlankScreen2.View
 			dispatcherTimer.Start();
 		}
 
+		private void ClockTickTimer_Tick(object? sender, EventArgs e)
+		{
+			_BlankScreenModel.Tick();
+		}
+
+		private void ShowDetailsTimer_Tick(object? sender, EventArgs e)
+		{
+			if (_ShowDetailsTimer == null)
+				return;
+
+			_ShowDetailsTimer.Stop();
+			_ShowDetailsTimer = null;
+
+			_ClockTickTimer?.Stop();
+			_ClockTickTimer = null;
+
+			_BlankScreenModel.ShowDetails = false;
+		}
+
 		private void MousePointerTimer_Tick(object? sender, EventArgs e)
 		{
 			if (!(sender is DispatcherTimer dispatcherTimer))
@@ -180,27 +199,8 @@ namespace BlankScreen2.View
 			_BlankScreenModel.ShowDetails = true;
 			_BlankScreenModel.Tick();
 
-			StartTimer(ref _ShowDetailsTimer, 5, _ShowDetailsTimer_Tick);
-			StartTimer(ref _ClockTickTimer, 1, _ClockTickTimer_Tick);
-		}
-
-		private void _ClockTickTimer_Tick(object? sender, EventArgs e)
-		{
-			_BlankScreenModel.Tick();
-		}
-
-		private void _ShowDetailsTimer_Tick(object? sender, EventArgs e)
-		{
-			if (_ShowDetailsTimer == null)
-				return;
-
-			_ShowDetailsTimer.Stop();
-			_ShowDetailsTimer = null;
-
-			_ClockTickTimer?.Stop();
-			_ClockTickTimer = null;
-
-			_BlankScreenModel.ShowDetails = false;
+			StartTimer(ref _ShowDetailsTimer, 5, ShowDetailsTimer_Tick);
+			StartTimer(ref _ClockTickTimer, 1, ClockTickTimer_Tick);
 		}
 	}
 }

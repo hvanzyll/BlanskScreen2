@@ -11,7 +11,7 @@ namespace BlankScreen2.Helpers
 		private Settings _Settings;
 		private AudioMgr _AudioMgr;
 		private SettingsWnd? _SettingsWnd;
-		private List<WndEntry> _BlankScreenWnds = new List<WndEntry>();
+		private readonly List<WndEntry> _BlankScreenWnds = new List<WndEntry>();
 		public bool ShowSettings { get; set; }
 
 		public Settings Settings { get => _Settings; set => _Settings = value; }
@@ -21,10 +21,10 @@ namespace BlankScreen2.Helpers
 			_Settings = LoadSettings();
 
 			_AudioMgr = new AudioMgr();
-			_AudioMgr.VolumeUpdatedEvent += _AudioMgr_VolumeUpdatedEvent;
+			_AudioMgr.VolumeUpdatedEvent += AudioMgr_VolumeUpdatedEvent;
 		}
 
-		private Settings LoadSettings()
+		private static Settings LoadSettings()
 		{
 			Settings? settings = SettingPath.LoadSettings<Settings>("settings");
 			if (settings == null)
@@ -32,7 +32,7 @@ namespace BlankScreen2.Helpers
 			return settings;
 		}
 
-		private void _AudioMgr_VolumeUpdatedEvent(object? sender, VolumeUpdatedEventArgs e)
+		private void AudioMgr_VolumeUpdatedEvent(object? sender, VolumeUpdatedEventArgs e)
 		{
 			_Settings.AudioModel.Volume = e.Volume;
 		}
@@ -71,14 +71,14 @@ namespace BlankScreen2.Helpers
 		public void ShowSettingsWnd()
 		{
 			_SettingsWnd = new(this);
-			_SettingsWnd.Closing += _SettingsWnd_Closing;
+			_SettingsWnd.Closing += SettingsWnd_Closing;
 			_SettingsWnd.Show();
 		}
 
-		private void _SettingsWnd_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+		private void SettingsWnd_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
 		{
 			if (_SettingsWnd != null)
-				_SettingsWnd.Closing -= _SettingsWnd_Closing;
+				_SettingsWnd.Closing -= SettingsWnd_Closing;
 
 			SaveSettings();
 		}

@@ -1,14 +1,12 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using BlankScreen2.Model;
 using CoreAudioApi;
 
 namespace BlankScreen2.Helpers
 {
 	public delegate void VolumeUpdatedEventHandler(object? sender, VolumeUpdatedEventArgs e);
 
-	internal class AudioMgr
+	internal sealed class AudioMgr
 	{
 		private MMDevice _MMDevice;
 		private HideWindowsVolume _HideWindowsVolume;
