@@ -1,5 +1,5 @@
-﻿using System;
-using BlankScreen2.Helpers;
+﻿using BlankScreen2.Helpers;
+using System;
 
 namespace BlankScreen2.Model
 {

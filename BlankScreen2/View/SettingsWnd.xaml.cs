@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using BlankScreen2.Helpers;
+﻿using BlankScreen2.Helpers;
+using System.Windows;
 
 namespace BlankScreen2.View
 {

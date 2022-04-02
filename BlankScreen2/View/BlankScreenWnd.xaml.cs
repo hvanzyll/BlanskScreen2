@@ -1,11 +1,11 @@
-﻿using System;
+﻿using BlankScreen2.Model;
+using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using BlankScreen2.Model;
 
 namespace BlankScreen2.View
 {

@@ -1,10 +1,7 @@
-﻿using System;
+﻿using CoreAudioApi;
+using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Threading;
-using System.Windows;
-using System.Windows.Threading;
-using CoreAudioApi;
 
 namespace BlankScreen2.Helpers
 {

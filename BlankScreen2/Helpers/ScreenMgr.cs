@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using BlankScreen2.Model;
+﻿using BlankScreen2.Model;
 using BlankScreen2.View;
+using System.Collections.Generic;
+using System.Linq;
 using WpfScreenHelper;
 
 namespace BlankScreen2.Helpers

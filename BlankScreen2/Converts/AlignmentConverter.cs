@@ -1,8 +1,8 @@
-﻿using System;
+﻿using BlankScreen2.Model;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using BlankScreen2.Model;
 
 namespace BlankScreen2.Converts
 {
