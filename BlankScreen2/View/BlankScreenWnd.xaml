@@ -7,14 +7,16 @@
         xmlns:model="clr-namespace:BlankScreen2.Model"
         d:DataContext="{d:DesignInstance Type=model:BlankScreenModel}"
 				mc:Ignorable="d"  ResizeMode="NoResize"
-				ScrollViewer.VerticalScrollBarVisibility="Disabled" ShowActivated="False"
+				ScrollViewer.VerticalScrollBarVisibility="Disabled" 
 				WindowStyle="None"
 				Width="200" Height="200"
+				Topmost="True" 
 				Loaded="Window_Loaded"
 				MouseRightButtonUp="Window_MouseRightButtonUp"
 				MouseLeftButtonUp="Window_MouseLeftButtonUp"
 				MouseDoubleClick="Window_MouseDoubleClick"
-				MouseMove="Window_MouseMove" Topmost="True">
+				MouseMove="Window_MouseMove" 
+				>
 
 	<Window.Resources>
 		<convert:SettingsVisablityConverter x:Key="SettingsVisablityConverter" />
@@ -36,9 +38,14 @@
 								 Visibility="{Binding ShowTime,Converter={StaticResource SettingsVisablityConverter}}"
 								 Margin="2" Foreground="White" />
 
-			<TextBlock Text="{Binding Volume,Converter={StaticResource VolumeConverter}, Mode=OneWay}"
+			<StackPanel Orientation="Horizontal" >
+				<TextBlock Text="{Binding DeviceName, Mode=OneWay}"
 								 Visibility="{Binding ShowVolume,Converter={StaticResource SettingsVisablityConverter}}"
 								 Margin="2" Foreground="White" />
+				<TextBlock Text="{Binding Volume, Mode=OneWay}"
+								 Visibility="{Binding ShowVolume,Converter={StaticResource SettingsVisablityConverter}}"
+								 Margin="2" Foreground="White" />
+			</StackPanel>
 			<ProgressBar Width="100" Height="10" HorizontalAlignment="Left" Value="{Binding Volume,Mode=OneWay}"
 									 Visibility="{Binding ShowVolume,Converter={StaticResource SettingsVisablityConverter}}" />
 		</StackPanel>

@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Threading;
+using System.Windows;
+using System.Windows.Threading;
 using CoreAudioApi;
 
 namespace BlankScreen2.Helpers
@@ -8,23 +12,48 @@ namespace BlankScreen2.Helpers
 
 	internal sealed class AudioMgr
 	{
-		private MMDevice _MMDevice;
+		private MMDeviceCollection? _MMDeviceCollection;
 		private HideWindowsVolume _HideWindowsVolume;
+		private Thread _InitThread;
+		private ConcurrentQueue<AudioVolumeNotificationData> _VolumeChangedQueue = new ConcurrentQueue<AudioVolumeNotificationData>();
+		private EventWaitHandle _VolumeChangeEnqueued = new EventWaitHandle(false, EventResetMode.AutoReset);
 
 		public event VolumeUpdatedEventHandler? VolumeUpdatedEvent;
 
 		public AudioMgr()
 		{
-			MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
-			_MMDevice = devEnum.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia);
-			_MMDevice.AudioEndpointVolume.OnVolumeNotification += new AudioEndpointVolumeNotificationDelegate(AudioEndpointVolume_OnVolumeNotification);
-
 			_HideWindowsVolume = new HideWindowsVolume();
+
+			_InitThread = new Thread(Init);
+			_InitThread.IsBackground = true;
+			_InitThread.Name = "AudioMgr";
+			_InitThread.Start();
 		}
 
-		public void UpdateVolume()
+		private void Init()
 		{
-			GetVolume();
+			MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
+			_MMDeviceCollection = devEnum.EnumerateAudioEndPoints(EDataFlow.eRender, EDeviceState.DEVICE_STATE_ACTIVE);
+			for (int deviceIndex = 0; deviceIndex < _MMDeviceCollection.Count; deviceIndex++)
+			{
+				MMDevice device = _MMDeviceCollection[deviceIndex];
+				device.AudioEndpointVolume.OnVolumeNotification += new AudioEndpointVolumeNotificationDelegate(AudioEndpointVolume_OnVolumeNotification);
+			}
+
+			ProcessVolumeNotifications();
+		}
+
+		private void ProcessVolumeNotifications()
+		{
+			while (true)
+			{
+				_VolumeChangeEnqueued.WaitOne();
+				while (_VolumeChangedQueue.TryDequeue(out AudioVolumeNotificationData? data) && data != null)
+				{
+					int volume = (int)(data.MMDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100);
+					VolumeUpdatedEvent?.Invoke(this, new VolumeUpdatedEventArgs(volume, data.MMDevice.FriendlyName));
+				}
+			};
 		}
 
 		public void HideWindowsVolume(bool hideWindowsVolume)
@@ -37,33 +66,20 @@ namespace BlankScreen2.Helpers
 
 		private void AudioEndpointVolume_OnVolumeNotification(AudioVolumeNotificationData data)
 		{
-			GetVolume();
-		}
-
-		private int GetVolume()
-		{
-			try
-			{
-				int volume = (int)(_MMDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100);
-
-				VolumeUpdatedEvent?.Invoke(this, new VolumeUpdatedEventArgs(volume));
-				return volume;
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(ex.ToString());
-				return 0;
-			}
+			_VolumeChangedQueue.Enqueue(data);
+			_VolumeChangeEnqueued.Set();
 		}
 	}
 
 	public class VolumeUpdatedEventArgs : EventArgs
 	{
 		public int Volume { get; private set; }
+		public string DeviceName { get; private set; }
 
-		public VolumeUpdatedEventArgs(int volume)
+		public VolumeUpdatedEventArgs(int volume, string deviceName)
 		{
 			Volume = volume;
+			DeviceName = deviceName;
 		}
 	}
 }

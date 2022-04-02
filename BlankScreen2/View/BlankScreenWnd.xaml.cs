@@ -37,13 +37,15 @@ namespace BlankScreen2.View
 		private void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			DisplayEntry displayEntry = _BlankScreenModel.DisplayEntry;
-			this.Height = displayEntry.WpfBounds.Height;
-			this.Width = displayEntry.WpfBounds.Width;
-			this.Top = displayEntry.WpfBounds.Top;
-			this.Left = displayEntry.WpfBounds.Left;
+			this.Height = displayEntry.WorkingArea.Height;
+			this.Width = displayEntry.WorkingArea.Width;
+			this.Top = displayEntry.WorkingArea.Top;
+			this.Left = displayEntry.WorkingArea.Left;
 
 			if (_BlankScreenModel.ShowClickScreenOnStart)
 				ShowDeails();
+
+			this.WindowState = WindowState.Maximized;
 		}
 
 		private void Window_MouseRightButtonUp(object sender, MouseButtonEventArgs e)

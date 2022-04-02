@@ -35,6 +35,7 @@ namespace BlankScreen2.Helpers
 		private void AudioMgr_VolumeUpdatedEvent(object? sender, VolumeUpdatedEventArgs e)
 		{
 			_Settings.AudioModel.Volume = e.Volume;
+			_Settings.AudioModel.DeviceName = e.DeviceName;
 		}
 
 		public void RefreshDisplays()

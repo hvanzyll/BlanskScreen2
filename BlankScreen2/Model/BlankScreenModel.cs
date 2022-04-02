@@ -16,6 +16,7 @@ namespace BlankScreen2.Model
 		public Location Location { get => ScreenMgr.Settings.Location; }
 		public bool ShowClickScreenOnStart { get => ScreenMgr.Settings.ShowClickScreenOnStart; }
 		public int Volume { get => _AudioModel.Volume; }
+		public string? DeviceName { get => _AudioModel.DeviceName; }
 		public string DisplayName { get => DisplayEntry.DisplayName; }
 
 		public DateTime DateTimeNow { get => DateTime.Now; }
