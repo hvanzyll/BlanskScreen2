@@ -24,61 +24,74 @@ using System;
 
 namespace CoreAudioApi
 {
-    public class AudioVolumeNotificationData
-    {
-        private Guid _EventContext;
-        private readonly bool _Muted;
-        private readonly float _MasterVolume;
-        private readonly int _Channels;
-        private readonly float[] _ChannelVolume;
+	public class AudioVolumeNotificationData
+	{
+		private Guid _EventContext;
+		private readonly bool _Muted;
+		private readonly float _MasterVolume;
+		private readonly int _Channels;
+		private readonly float[] _ChannelVolume;
+		private MMDevice _MMDevice;
 
-        public Guid EventContext
-        {
-            get
-            {
-                return _EventContext;
-            }
-        }
+		public Guid EventContext
+		{
+			get
+			{
+				return _EventContext;
+			}
+		}
 
-        public bool Muted
-        {
-            get
-            {
-                return _Muted;
-            }
-        }
+		public bool Muted
+		{
+			get
+			{
+				return _Muted;
+			}
+		}
 
-        public float MasterVolume
-        {
-            get
-            {
-                return _MasterVolume;
-            }
-        }
+		public float MasterVolume
+		{
+			get
+			{
+				return _MasterVolume;
+			}
+		}
 
-        public int Channels
-        {
-            get
-            {
-                return _Channels;
-            }
-        }
+		public int Channels
+		{
+			get
+			{
+				return _Channels;
+			}
+		}
 
-        public float[] ChannelVolume
-        {
-            get
-            {
-                return _ChannelVolume;
-            }
-        }
+		public float[] ChannelVolume
+		{
+			get
+			{
+				return _ChannelVolume;
+			}
+		}
 
-        public AudioVolumeNotificationData(Guid eventContext, bool muted, float masterVolume, float[] channelVolume)
-        {
-            _EventContext = eventContext;
-            _Muted = muted;
-            _MasterVolume = masterVolume;
-            _Channels = channelVolume.Length;
-            _ChannelVolume = channelVolume;
-        }
-    }
+		public MMDevice MMDevice
+		{
+			get
+			{
+				return _MMDevice;
+			}
+			set
+			{
+				_MMDevice = value;
+			}
+		}
+
+		public AudioVolumeNotificationData(Guid eventContext, bool muted, float masterVolume, float[] channelVolume)
+		{
+			_EventContext = eventContext;
+			_Muted = muted;
+			_MasterVolume = masterVolume;
+			_Channels = channelVolume.Length;
+			_ChannelVolume = channelVolume;
+		}
+	}
 }

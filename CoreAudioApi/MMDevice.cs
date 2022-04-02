@@ -73,7 +73,7 @@ namespace CoreAudioApi
         {
             object result;
             Marshal.ThrowExceptionForHR(_RealDevice.Activate(ref IID_IAudioEndpointVolume, CLSCTX.ALL, IntPtr.Zero, out result));
-            _AudioEndpointVolume = new AudioEndpointVolume(result as IAudioEndpointVolume);
+			_AudioEndpointVolume = new AudioEndpointVolume(result as IAudioEndpointVolume, this);
         }
 
         #endregion Init
