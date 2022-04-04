@@ -42,6 +42,8 @@ namespace BlankScreen2.Helpers
 		{
 			List<Screen> screens = Screen.AllScreens.ToList();
 
+			Settings.DisplayEntries.ResetRefreshed();
+
 			foreach (Screen screen in screens)
 			{
 				DisplayEntry? displayEntryFound = Settings.DisplayEntries.FindByDisplayName(screen.DeviceName);
@@ -52,7 +54,10 @@ namespace BlankScreen2.Helpers
 					Settings.DisplayEntries.Add(displayEntry);
 				}
 				else
+				{
+					displayEntryFound.SetScreenData(screen);
 					displayEntryFound.Refreshed = true;
+				}
 			}
 
 			Settings.DisplayEntries.ClearAllNonRefreshed();

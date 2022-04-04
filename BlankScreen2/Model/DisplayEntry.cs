@@ -23,13 +23,18 @@ namespace BlankScreen2.Model
 		public DisplayEntry(Screen screen)
 		{
 			_Enabled = false;
-			_DeviceName = screen.DeviceName;
-			_WpfBounds = screen.WpfBounds;
-			_Bounds = screen.Bounds;
-			_Primary = screen.Primary;
-			_ScaleFactor = screen.ScaleFactor;
-			_WorkingArea = screen.WorkingArea;
-			_WpfWorkingArea = screen.WorkingArea;
+			SetScreenData(screen);
+		}
+
+		public void SetScreenData(Screen screen)
+		{
+			DeviceName = screen.DeviceName;
+			WpfBounds = screen.WpfBounds;
+			Bounds = screen.Bounds;
+			Primary = screen.Primary;
+			ScaleFactor = screen.ScaleFactor;
+			WorkingArea = screen.WorkingArea;
+			WpfWorkingArea = screen.WorkingArea;
 		}
 
 		public bool Enabled { get => _Enabled; set => SetField(ref _Enabled, value); }
@@ -40,25 +45,6 @@ namespace BlankScreen2.Model
 		public double ScaleFactor { get => _ScaleFactor; set => SetField(ref _ScaleFactor, value); }
 		public Rect WorkingArea { get => _WorkingArea; set => SetField(ref _WorkingArea, value); }
 		public Rect WpfWorkingArea { get => _WpfWorkingArea; set => SetField(ref _WpfWorkingArea, value); }
-
-		public string DisplayName
-		{
-			get
-			{
-				StringBuilder sb = new();
-				if (!string.IsNullOrEmpty(DeviceName))
-				{
-					int pos = DeviceName.LastIndexOf('\\') + 1;
-					sb.Append(DeviceName[pos..]);
-				}
-				sb.Append(" ");
-				sb.Append(WpfBounds.Width);
-				sb.Append("x");
-				sb.Append(WpfBounds.Height);
-
-				return sb.ToString();
-			}
-		}
 
 		public bool Refreshed { get => _Refreshed; set => _Refreshed = value; }
 	}

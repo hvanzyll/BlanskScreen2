@@ -22,6 +22,7 @@
 		<convert:HorizontalAlignmentConverter x:Key="HorizontalAlignmentConverter" />
 		<convert:VerticalAlignmentConverter x:Key="VerticalAlignmentConverter" />
 		<convert:TimeConverter x:Key="TimeConverter" />
+		<convert:DisplayNameConverter x:Key="DisplayNameConverter" />
 	</Window.Resources>
 
 	<Grid Background="Black">
@@ -29,22 +30,29 @@
 								Margin="10"
 								HorizontalAlignment="{Binding Location,Converter={StaticResource HorizontalAlignmentConverter}}"
 								VerticalAlignment="{Binding Location,Converter={StaticResource VerticalAlignmentConverter}}">
-			<TextBlock Text="{Binding DisplayName}"
+			<TextBlock
 								 Visibility="{Binding ShowDevice,Converter={StaticResource SettingsVisablityConverter}}"
-								 Margin="2" Foreground="White" />
+								 Margin="2" Foreground="White">
+				<TextBlock.Text>
+					<MultiBinding Converter="{StaticResource DisplayNameConverter }">
+						<Binding Path="DisplayName" />
+						<Binding Path="WorkingArea" />
+					</MultiBinding>
+				</TextBlock.Text>
+			</TextBlock>
 			<TextBlock Text="{Binding DateTimeNow,Converter={StaticResource TimeConverter}}"
 								 Visibility="{Binding ShowTime,Converter={StaticResource SettingsVisablityConverter}}"
 								 Margin="2" Foreground="White" />
 
 			<StackPanel Orientation="Horizontal">
-				<TextBlock Text="{Binding DeviceName, Mode=OneWay}"
+				<TextBlock Text="{Binding AudioDeviceName, Mode=OneWay}"
 								 Visibility="{Binding ShowVolume,Converter={StaticResource SettingsVisablityConverter}}"
 								 Margin="2" Foreground="White" />
 				<TextBlock Text="{Binding Volume, Mode=OneWay}"
 								 Visibility="{Binding ShowVolume,Converter={StaticResource SettingsVisablityConverter}}"
 								 Margin="2" Foreground="White" />
 			</StackPanel>
-			<ProgressBar Width="100" Height="10" HorizontalAlignment="Left" Value="{Binding Volume,Mode=OneWay}"
+			<ProgressBar Width="100" Height="15" HorizontalAlignment="Left" Value="{Binding Volume,Mode=OneWay}"
 									 Visibility="{Binding ShowVolume,Converter={StaticResource SettingsVisablityConverter}}" />
 		</StackPanel>
 	</Grid>

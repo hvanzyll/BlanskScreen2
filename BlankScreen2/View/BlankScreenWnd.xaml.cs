@@ -1,4 +1,5 @@
-﻿using BlankScreen2.Model;
+﻿using BlankScreen2.Converts;
+using BlankScreen2.Model;
 using System;
 using System.ComponentModel;
 using System.Threading;
@@ -15,10 +16,10 @@ namespace BlankScreen2.View
 	public sealed partial class BlankScreenWnd : Window
 	{
 		private BlankScreenModel _BlankScreenModel;
+
 		private DispatcherTimer? _MousePointerTimer;
 		private DispatcherTimer? _ShowDetailsTimer;
 		private DispatcherTimer? _ClockTickTimer;
-		private Point? _MouseLastPos;
 
 		public BlankScreenWnd(BlankScreenModel blankScreenModel)
 		{
@@ -56,7 +57,8 @@ namespace BlankScreen2.View
 			cm.Items.Add(new Separator());
 			foreach (DisplayEntry displayEntry in _BlankScreenModel.DisplayEntries)
 			{
-				cm.Items.Add(CreateMenu(displayEntry.DisplayName, MenuItem_ShowHideScreen, displayEntry.Enabled));
+				string displayName = DisplayNameConverter.ConvertDisplayName(displayEntry.DeviceName, displayEntry.WpfWorkingArea);
+				cm.Items.Add(CreateMenu(displayName, MenuItem_ShowHideScreen, displayEntry.Enabled));
 			}
 
 			cm.Items.Add(new Separator());
@@ -164,16 +166,16 @@ namespace BlankScreen2.View
 
 		private bool MouseMoved(Point currentPos)
 		{
-			if (!_MouseLastPos.HasValue)
+			if (!_BlankScreenModel.MouseLastPos.HasValue)
 			{
-				_MouseLastPos = currentPos;
+				_BlankScreenModel.MouseLastPos = currentPos;
 				return true;
 			}
 
-			double difX = Math.Abs(currentPos.X - _MouseLastPos.Value.X);
-			double difY = Math.Abs(currentPos.Y - _MouseLastPos.Value.Y);
+			double difX = Math.Abs(currentPos.X - _BlankScreenModel.MouseLastPos.Value.X);
+			double difY = Math.Abs(currentPos.Y - _BlankScreenModel.MouseLastPos.Value.Y);
 
-			_MouseLastPos = currentPos;
+			_BlankScreenModel.MouseLastPos = currentPos;
 			double diffVal = 2;
 
 			if ((difX > diffVal) || (difY > diffVal))

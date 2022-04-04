@@ -5,6 +5,7 @@
 				xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 				xmlns:system="clr-namespace:System;assembly=mscorlib"
 				xmlns:local="clr-namespace:BlankScreen2"
+				xmlns:convert="clr-namespace:BlankScreen2.Converts"
 				xmlns:model="clr-namespace:BlankScreen2.Model"
 				mc:Ignorable="d"
 				Title="Blank Screen Settings"  SizeToContent="Height" Width="375">
@@ -15,6 +16,7 @@
 				<x:Type TypeName="model:Location" />
 			</ObjectDataProvider.MethodParameters>
 		</ObjectDataProvider>
+		<convert:DisplayNameConverter x:Key="DisplayNameConverter" />
 	</Window.Resources>
 
 	<Grid>
@@ -27,8 +29,10 @@
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<DataGrid  Grid.Column="0" x:Name="Screens" Grid.Row="0"  AutoGenerateColumns="False" Margin="2"
-								ItemsSource="{Binding DisplayEntries}" CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False" SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False">
+		<DataGrid Grid.Column="0" x:Name="Screens" Grid.Row="0"  AutoGenerateColumns="False" Margin="2"
+							ItemsSource="{Binding DisplayEntries}"
+							CanUserReorderColumns="False" CanUserSortColumns="False" CanUserResizeColumns="False"
+							SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False">
 			<DataGrid.Columns>
 				<DataGridTemplateColumn Header="Blank">
 					<DataGridTemplateColumn.CellTemplate>
@@ -41,7 +45,15 @@
 				<DataGridTemplateColumn Width="*" Header="Displays">
 					<DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>
-							<TextBlock Text="{Binding DisplayName}" TextWrapping="Wrap" />
+							<TextBlock TextWrapping="Wrap">
+								<TextBlock.Text>
+									<MultiBinding Converter="{StaticResource DisplayNameConverter }">
+										<Binding Path="DeviceName" />
+										<Binding Path="WpfWorkingArea" />
+									</MultiBinding>
+								</TextBlock.Text>
+							</TextBlock>
+							<!--<TextBlock Text="{Binding DisplayName}" TextWrapping="Wrap" />-->
 						</DataTemplate>
 					</DataGridTemplateColumn.CellTemplate>
 				</DataGridTemplateColumn>
@@ -51,7 +63,6 @@
 		<StackPanel Grid.Column="1">
 			<GroupBox Header="Click Screen Show">
 				<StackPanel>
-					<CheckBox Content="Hide Windows Volume" IsChecked="{Binding HideWindowsVolume}" />
 					<CheckBox Content="Show Device" IsChecked="{Binding ShowDevice}" />
 					<CheckBox Content="Show Time" IsChecked="{Binding ShowTime}" />
 					<CheckBox Content="Show Volume" IsChecked="{Binding ShowVolume}" />
@@ -63,6 +74,7 @@
 			</GroupBox>
 			<GroupBox Header="Start/Exit">
 				<StackPanel>
+					<CheckBox Content="Hide Windows Volume" IsChecked="{Binding HideWindowsVolume}" />
 					<CheckBox Content="Blank Screen on Start" IsChecked="{Binding BlankScreenOnStart}" />
 					<CheckBox Content="Exit on Clear" IsChecked="{Binding ExitOnClear}" />
 					<CheckBox IsChecked="{Binding ShowClickScreenOnStart}">

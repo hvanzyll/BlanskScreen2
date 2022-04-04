@@ -1,5 +1,6 @@
 ﻿using BlankScreen2.Helpers;
 using System;
+using System.Windows;
 
 namespace BlankScreen2.Model
 {
@@ -10,14 +11,17 @@ namespace BlankScreen2.Model
 		private readonly AudioModel _AudioModel;
 		private bool _ShowDetails;
 
+		public Point? MouseLastPos { get; set; }
+
 		public bool ShowDevice { get => ScreenMgr.Settings.ShowDevice; }
 		public bool ShowTime { get => ScreenMgr.Settings.ShowTime; }
 		public bool ShowVolume { get => ScreenMgr.Settings.ShowVolume; }
 		public Location Location { get => ScreenMgr.Settings.Location; }
 		public bool ShowClickScreenOnStart { get => ScreenMgr.Settings.ShowClickScreenOnStart; }
 		public int Volume { get => _AudioModel.Volume; }
-		public string? DeviceName { get => _AudioModel.DeviceName; }
-		public string DisplayName { get => DisplayEntry.DisplayName; }
+		public string? AudioDeviceName { get => _AudioModel.DeviceName; }
+		public Rect WorkingArea { get => DisplayEntry.WpfWorkingArea; }
+		public string? DisplayName { get => DisplayEntry.DeviceName; }
 
 		public DateTime DateTimeNow { get => DateTime.Now; }
 
