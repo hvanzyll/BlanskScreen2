@@ -18,6 +18,8 @@ namespace BlankScreen2.Model
 		public bool ShowVolume { get => ScreenMgr.Settings.ShowVolume; }
 		public Location Location { get => ScreenMgr.Settings.Location; }
 		public bool ShowClickScreenOnStart { get => ScreenMgr.Settings.ShowClickScreenOnStart; }
+		public bool TurnDownBrightnessContrast { get => ScreenMgr.Settings.TurnDownBrightnessContrast; }
+
 		public int Volume { get => _AudioModel.Volume; }
 		public string? AudioDeviceName { get => _AudioModel.DeviceName; }
 		public Rect WorkingArea { get => DisplayEntry.WpfWorkingArea; }

@@ -3,6 +3,7 @@ using BlankScreen2.Model;
 using System;
 using System.ComponentModel;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,6 +21,7 @@ namespace BlankScreen2.View
 		private DispatcherTimer? _MousePointerTimer;
 		private DispatcherTimer? _ShowDetailsTimer;
 		private DispatcherTimer? _ClockTickTimer;
+		private bool _Closing;
 
 		public BlankScreenWnd(BlankScreenModel blankScreenModel)
 		{
@@ -35,7 +37,7 @@ namespace BlankScreen2.View
 				ShowDeails();
 		}
 
-		private void Window_Loaded(object sender, RoutedEventArgs e)
+		private async void Window_Loaded(object sender, RoutedEventArgs e)
 		{
 			DisplayEntry displayEntry = _BlankScreenModel.DisplayEntry;
 			this.Height = displayEntry.WorkingArea.Height;
@@ -47,10 +49,44 @@ namespace BlankScreen2.View
 				ShowDeails();
 
 			this.WindowState = WindowState.Maximized;
+			_Closing = false;
+
+			await Task.Run(() =>
+			{
+				_BlankScreenModel.DisplayEntry.Screen.GetMonitorCapabilities();
+				_BlankScreenModel.DisplayEntry.Screen.BackupMonitorCapabilities();
+				TurnDownBrightnessContrast();
+			});
+		}
+
+		private void Window_Closing(object sender, CancelEventArgs e)
+		{
+			_Closing = true;
+			StopTimers();
+
+			_BlankScreenModel.DisplayEntry.Screen.RestoreMonitorCapabilities();
+		}
+
+		private void StopTimers()
+		{
+			_MousePointerTimer?.Stop();
+			_ShowDetailsTimer?.Stop();
+			_ClockTickTimer?.Stop();
+		}
+
+		private void TurnDownBrightnessContrast()
+		{
+			if (_BlankScreenModel.TurnDownBrightnessContrast)
+			{
+				_BlankScreenModel.DisplayEntry.Screen.SetBrightness(0);
+				_BlankScreenModel.DisplayEntry.Screen.SetContrast(0);
+			}
 		}
 
 		private void Window_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
 		{
+			StopTimers();
+
 			ContextMenu cm = new ContextMenu();
 			cm.Items.Add(CreateMenu("Show Settings", MenuItem_ShowSettingsClick));
 
@@ -63,7 +99,14 @@ namespace BlankScreen2.View
 
 			cm.Items.Add(new Separator());
 			cm.Items.Add(CreateMenu("Exit", MenuItem_ExitClick));
+			cm.Closed += Cm_Closed;
 			cm.IsOpen = true;
+		}
+
+		private void Cm_Closed(object sender, RoutedEventArgs e)
+		{
+			if (!_Closing)
+				StartTimer(ref _MousePointerTimer, 5, MousePointerTimer_Tick);
 		}
 
 		private static MenuItem CreateMenu(string strHeader, RoutedEventHandler reh, bool bIsChecked = false)
@@ -124,6 +167,7 @@ namespace BlankScreen2.View
 				StartTimer(ref _MousePointerTimer, 5, MousePointerTimer_Tick);
 
 				ShowMouse(true);
+				_BlankScreenModel.DisplayEntry.Screen.RestoreMonitorCapabilities();
 			}
 		}
 
@@ -162,6 +206,7 @@ namespace BlankScreen2.View
 
 			dispatcherTimer.Stop();
 			ShowMouse(false);
+			TurnDownBrightnessContrast();
 		}
 
 		private bool MouseMoved(Point currentPos)

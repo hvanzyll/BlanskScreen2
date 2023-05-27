@@ -1,8 +1,8 @@
 ﻿using BlankScreen2.Model;
 using BlankScreen2.View;
+using HVWpfScreenHelper;
 using System.Collections.Generic;
 using System.Linq;
-using WpfScreenHelper;
 
 namespace BlankScreen2.Helpers
 {
@@ -19,6 +19,7 @@ namespace BlankScreen2.Helpers
 		public ScreenMgr()
 		{
 			_Settings = LoadSettings();
+			RefreshDisplays();
 
 			_AudioMgr = new AudioMgr();
 			_AudioMgr.VolumeUpdatedEvent += AudioMgr_VolumeUpdatedEvent;
@@ -49,8 +50,14 @@ namespace BlankScreen2.Helpers
 				DisplayEntry? displayEntryFound = Settings.DisplayEntries.FindByDisplayName(screen.DeviceName);
 				if (displayEntryFound == null)
 				{
+					DisplayEntrySettings? displayEntrySettings = Settings.DisplayEntriesSettings.FindByDisplayName(screen.DeviceName);
+
 					DisplayEntry displayEntry = new DisplayEntry(screen);
 					displayEntry.Refreshed = true;
+
+					if (displayEntrySettings != null && !string.IsNullOrEmpty(displayEntrySettings.DeviceName))
+						displayEntry.Enabled = displayEntrySettings.Enabled;
+
 					Settings.DisplayEntries.Add(displayEntry);
 				}
 				else
@@ -167,6 +174,15 @@ namespace BlankScreen2.Helpers
 
 		private void SaveSettings()
 		{
+			_Settings.DisplayEntriesSettings.Clear();
+
+			foreach (DisplayEntry displayEntry in _Settings.DisplayEntries)
+				_Settings.DisplayEntriesSettings.Add(new DisplayEntrySettings()
+				{
+					DeviceName = displayEntry.DeviceName,
+					Enabled = displayEntry.Enabled
+				});
+
 			SettingPath.SaveSettings("settings", _Settings);
 		}
 	}

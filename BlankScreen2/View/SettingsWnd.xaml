@@ -1,12 +1,11 @@
 ﻿<Window x:Class="BlankScreen2.View.SettingsWnd"
 				xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-				xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 				xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+				xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 				xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-				xmlns:system="clr-namespace:System;assembly=mscorlib"
-				xmlns:local="clr-namespace:BlankScreen2"
 				xmlns:convert="clr-namespace:BlankScreen2.Converts"
 				xmlns:model="clr-namespace:BlankScreen2.Model"
+				xmlns:system="clr-namespace:System;assembly=mscorlib"
 				mc:Ignorable="d"
 				Title="Blank Screen Settings"  SizeToContent="Height" Width="375">
 	<Window.Resources>
@@ -82,6 +81,13 @@
 							<Run Text="Show Click Screen" />
 							<LineBreak />
 							<Run Text="Selection on Start" />
+						</TextBlock>
+					</CheckBox>
+					<CheckBox IsChecked="{Binding TurnDownBrightnessContrast}">
+						<TextBlock>
+							<Run Text="Turn down " />
+							<LineBreak />
+							<Run Text="Brightness and Contrast" />
 						</TextBlock>
 					</CheckBox>
 				</StackPanel>

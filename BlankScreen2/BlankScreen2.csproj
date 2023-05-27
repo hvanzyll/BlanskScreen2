@@ -14,7 +14,15 @@
     <ApplicationIcon>MainIcon.ico</ApplicationIcon>
     <SignAssembly>False</SignAssembly>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <StartupObject />
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ViewModel\**" />
+    <EmbeddedResource Remove="ViewModel\**" />
+    <None Remove="ViewModel\**" />
+    <Page Remove="ViewModel\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="MainIcon.ico" />
@@ -27,10 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoreAudioApi\CoreAudioApi.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModel\" />
+    <ProjectReference Include="..\HVWpfScreenHelper\HVWpfScreenHelper.csproj" />
   </ItemGroup>
 
 </Project>

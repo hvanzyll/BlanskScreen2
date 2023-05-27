@@ -34,12 +34,15 @@ namespace BlankScreen2.Helpers
 
 		private void Init()
 		{
-			for (int index = 1; this.hWndInject == IntPtr.Zero && index < 9; ++index)
+			int seconds = 5;
+			int sleep = 10;
+			int retries = seconds * 1000 / sleep;
+			for (int count = 1; this.hWndInject == IntPtr.Zero && count < retries; ++count)
 			{
-				keybd_event((byte)VOLUME_UP_KEY, (byte)0, 0U, 0);
 				keybd_event((byte)VOLUME_DOWN_KEY, (byte)0, 0U, 0);
+				keybd_event((byte)VOLUME_UP_KEY, (byte)0, 0U, 0);
 				this.hWndInject = FindOSDWindow(true);
-				Thread.Sleep(500);
+				Thread.Sleep(sleep);
 			}
 		}
 

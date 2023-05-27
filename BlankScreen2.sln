@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlankScreen2", "BlankScreen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreAudioApi", "CoreAudioApi\CoreAudioApi.csproj", "{9F1076AA-63DF-4128-9C10-FD65E425C783}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HVWpfScreenHelper", "HVWpfScreenHelper\HVWpfScreenHelper.csproj", "{D31C057C-F168-42CA-865E-C247EA357ADE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{9F1076AA-63DF-4128-9C10-FD65E425C783}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F1076AA-63DF-4128-9C10-FD65E425C783}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F1076AA-63DF-4128-9C10-FD65E425C783}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D31C057C-F168-42CA-865E-C247EA357ADE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D31C057C-F168-42CA-865E-C247EA357ADE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D31C057C-F168-42CA-865E-C247EA357ADE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D31C057C-F168-42CA-865E-C247EA357ADE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
