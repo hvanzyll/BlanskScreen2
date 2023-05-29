@@ -7,22 +7,13 @@ namespace BlankScreen2.Model
 	public sealed class DisplayEntry : NotifyPropertyChanged
 	{
 		private Screen _Screen;
-		private bool _Enabled;
+		private bool _Enabled = false;
 
-		private bool _Refreshed;
-
-		public DisplayEntry()
-		{ }
+		private bool _Refreshed = false;
 
 		public DisplayEntry(Screen screen)
 		{
-			_Enabled = false;
-			SetScreenData(screen);
-		}
-
-		public void SetScreenData(Screen screen)
-		{
-			Screen = screen;
+			_Screen = screen;
 		}
 
 		public bool Enabled { get => _Enabled; set => SetField(ref _Enabled, value); }

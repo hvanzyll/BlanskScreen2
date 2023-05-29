@@ -36,13 +36,13 @@ namespace HVWpfScreenHelper
 		private const int MONITORINFOF_PRIMARY = 1;
 
 		private readonly IntPtr monitorHandle;
-		private IntPtr hPhysicalMonitor;
+		private IntPtr physicalMonitorHandle = IntPtr.MinValue;
 
 		private NativeMethods.MonitorCapabilitiesMask monitorCababilities = MonitorCapabilitiesMask.MC_CAPS_NONE;
 		private NativeMethods.ColorTemperatureMask colorTemperature = ColorTemperatureMask.MC_SUPPORTED_COLOR_TEMPERATURE_NONE;
 
-		public readonly BrightnessSettings brightnessSettings = new BrightnessSettings();
-		public readonly ContrastSettings contrastSettings = new ContrastSettings();
+		public readonly BrightnessSettings _brightnessSettings = new BrightnessSettings();
+		public readonly ContrastSettings _contrastSettings = new ContrastSettings();
 
 		public static IEnumerable<Screen> AllScreens
 		{
@@ -75,7 +75,7 @@ namespace HVWpfScreenHelper
 					return new Screen((IntPtr)(-1163005939));
 				}
 
-				return AllScreens.FirstOrDefault((Screen t) => t.Primary);
+				return AllScreens.FirstOrDefault(t => t.Primary);
 			}
 		}
 
@@ -135,8 +135,7 @@ namespace HVWpfScreenHelper
 			}
 		}
 
-		protected IntPtr MonitorHandle
-		{ get { return monitorHandle; } }
+		protected IntPtr MonitorHandle { get => monitorHandle; }
 
 		static Screen()
 		{
@@ -242,23 +241,31 @@ namespace HVWpfScreenHelper
 			return monitorHandle.GetHashCode();
 		}
 
+		#region Monitor Capabilities
+
 		public bool GetMonitorCapabilities()
 		{
-			int monitorCount = 0;
-			bool ret = NativeMethods.GetNumberOfPhysicalMonitorsFromHMONITOR(monitorHandle, ref monitorCount);
-			if (!ret || monitorCount != 1)
-				return false;
-
-			PHYSICAL_MONITOR pHYSICAL_MONITOR = new PHYSICAL_MONITOR
+			bool ret = false;
+			if (physicalMonitorHandle == IntPtr.MinValue)
 			{
-				szPhysicalMonitorDescription = new System.Char[NativeMethods.PHYSICAL_MONITOR_DESCRIPTION_SIZE]
-			};
+				int monitorCount = 0;
+				ret = NativeMethods.GetNumberOfPhysicalMonitorsFromHMONITOR(monitorHandle, ref monitorCount);
+				if (!ret || monitorCount != 1)
+					return false;
 
-			NativeMethods.GetPhysicalMonitorsFromHMONITOR(MonitorHandle, monitorCount, ref pHYSICAL_MONITOR);
+				PHYSICAL_MONITOR pHYSICAL_MONITOR = new PHYSICAL_MONITOR
+				{
+					szPhysicalMonitorDescription = new System.Char[NativeMethods.PHYSICAL_MONITOR_DESCRIPTION_SIZE]
+				};
 
-			hPhysicalMonitor = pHYSICAL_MONITOR.hPhysicalMonitor;
+				ret = NativeMethods.GetPhysicalMonitorsFromHMONITOR(MonitorHandle, monitorCount, ref pHYSICAL_MONITOR);
+				if (!ret)
+					return false;
 
-			ret = NativeMethods.GetMonitorCapabilities(hPhysicalMonitor, ref monitorCababilities, ref colorTemperature);
+				physicalMonitorHandle = pHYSICAL_MONITOR.hPhysicalMonitor;
+			}
+
+			ret = NativeMethods.GetMonitorCapabilities(physicalMonitorHandle, ref monitorCababilities, ref colorTemperature);
 
 			return ret;
 		}
@@ -273,32 +280,52 @@ namespace HVWpfScreenHelper
 			return (monitorCababilities & NativeMethods.MonitorCapabilitiesMask.MC_CAPS_CONTRAST) == MonitorCapabilitiesMask.MC_CAPS_CONTRAST;
 		}
 
+		#endregion Monitor Capabilities
+
+		#region backup and restore
+
 		public void BackupMonitorCapabilities()
 		{
 			if (HasMonitorCapabilitiesBrightness())
-				BackupBrightness();
+				BackupBrightness(_brightnessSettings);
 
 			if (HasMonitorCapabilitiesContrast())
-				BackupContrast();
+				BackupContrast(_contrastSettings);
 		}
 
 		public async Task RestoreMonitorCapabilities()
 		{
 			if (HasMonitorCapabilitiesBrightness())
-				await RestoreBrightness();
+				await RestoreBrightness(_brightnessSettings);
 
 			if (HasMonitorCapabilitiesContrast())
-				await RestoreContrast();
+				await RestoreContrast(_contrastSettings);
 		}
+
+		public bool NeedsRestore()
+		{
+			int brightness = GetBrightness();
+			if (brightness != _brightnessSettings.CurrentBrightness)
+				return true;
+
+			int contrast = GetContrast();
+			if (contrast != _contrastSettings.CurrentContrast)
+				return true;
+
+			return false;
+		}
+
+		#endregion backup and restore
 
 		#region Brightness
 
-		private bool BackupBrightness()
+		private bool BackupBrightness(BrightnessSettings brightnessSettings)
 		{
 			int pdwMinimumBrightness = 0;
 			int pdwCurrentBrightness = 0;
 			int pdwMaximumBrightness = 0;
-			bool ret = NativeMethods.GetMonitorBrightness(hPhysicalMonitor, ref pdwMinimumBrightness, ref pdwCurrentBrightness, ref pdwMaximumBrightness);
+			bool ret = NativeMethods.GetMonitorBrightness(physicalMonitorHandle, ref pdwMinimumBrightness, ref pdwCurrentBrightness, ref pdwMaximumBrightness);
+			Debug.Assert(ret);
 			if (ret)
 			{
 				brightnessSettings.MinimumBrightness = pdwMinimumBrightness;
@@ -310,7 +337,7 @@ namespace HVWpfScreenHelper
 			return ret;
 		}
 
-		private async Task<bool> RestoreBrightness()
+		private async Task<bool> RestoreBrightness(BrightnessSettings brightnessSettings)
 		{
 			if (!brightnessSettings.AreSettingsSet())
 				return false;
@@ -327,8 +354,8 @@ namespace HVWpfScreenHelper
 
 			int oldBrightness = GetBrightness();
 
-			brightness = Math.Max(Math.Min(brightness, brightnessSettings.MaximumBrightness), brightnessSettings.MinimumBrightness);
-			bool ret = NativeMethods.SetMonitorBrightness(hPhysicalMonitor, brightness);
+			brightness = Math.Max(Math.Min(brightness, _brightnessSettings.MaximumBrightness), _brightnessSettings.MinimumBrightness);
+			bool ret = NativeMethods.SetMonitorBrightness(physicalMonitorHandle, brightness);
 			if (!ret)
 				return false;
 
@@ -361,7 +388,7 @@ namespace HVWpfScreenHelper
 
 		public bool GetBrightness(ref int pdwMinimumBrightness, ref int pdwCurrentBrightness, ref int pdwMaximumBrightness)
 		{
-			bool ret = NativeMethods.GetMonitorBrightness(hPhysicalMonitor, ref pdwMinimumBrightness, ref pdwCurrentBrightness, ref pdwMaximumBrightness);
+			bool ret = NativeMethods.GetMonitorBrightness(physicalMonitorHandle, ref pdwMinimumBrightness, ref pdwCurrentBrightness, ref pdwMaximumBrightness);
 
 			return ret;
 		}
@@ -370,13 +397,14 @@ namespace HVWpfScreenHelper
 
 		#region Contrast
 
-		private bool BackupContrast()
+		private bool BackupContrast(ContrastSettings contrastSettings)
 		{
 			int pdwMinimumContrast = 0;
 			int pdwCurrentContrast = 0;
 			int pdwMaximumContrast = 0;
 
 			bool ret = GetContrast(ref pdwMinimumContrast, ref pdwCurrentContrast, ref pdwMaximumContrast);
+			Debug.Assert(ret);
 			if (ret)
 			{
 				contrastSettings.MinimumContrast = pdwMinimumContrast;
@@ -387,7 +415,7 @@ namespace HVWpfScreenHelper
 			return ret;
 		}
 
-		private async Task<bool> RestoreContrast()
+		private async Task<bool> RestoreContrast(ContrastSettings contrastSettings)
 		{
 			if (!contrastSettings.AreSettingsSet())
 				return false;
@@ -404,9 +432,9 @@ namespace HVWpfScreenHelper
 
 			int oldContrast = GetContrast();
 
-			int adjContrast = Math.Max(Math.Min(contrast, contrastSettings.MaximumContrast), contrastSettings.MinimumContrast);
+			int adjContrast = Math.Max(Math.Min(contrast, _contrastSettings.MaximumContrast), _contrastSettings.MinimumContrast);
 
-			bool ret = NativeMethods.SetMonitorContrast(hPhysicalMonitor, adjContrast);
+			bool ret = NativeMethods.SetMonitorContrast(physicalMonitorHandle, adjContrast);
 			if (!ret)
 				return false;
 
@@ -419,7 +447,7 @@ namespace HVWpfScreenHelper
 				counter++;
 			};
 
-			Debug.WriteLine($"Org Contrast:{contrast}, Adjusted Contrast:{adjContrast}, oldContrast:{oldContrast}, newContrast:{newContrast} on device:{hPhysicalMonitor}");
+			Debug.WriteLine($"Org Contrast:{contrast}, Adjusted Contrast:{adjContrast}, oldContrast:{oldContrast}, newContrast:{newContrast} on device:{physicalMonitorHandle}");
 
 			return newContrast != -1;
 		}
@@ -429,9 +457,9 @@ namespace HVWpfScreenHelper
 			if (!HasMonitorCapabilitiesContrast())
 				return false;
 
-			bool ret = NativeMethods.GetMonitorContrast(hPhysicalMonitor, ref pdwMinimumContrast, ref pdwCurrentContrast, ref pdwMaximumContrast);
+			bool ret = NativeMethods.GetMonitorContrast(physicalMonitorHandle, ref pdwMinimumContrast, ref pdwCurrentContrast, ref pdwMaximumContrast);
 
-			Debug.WriteLine($"GetContrast - Monitor:{hPhysicalMonitor}, Min:{pdwMinimumContrast}, Max:{pdwMaximumContrast}, Current:{pdwCurrentContrast}");
+			Debug.WriteLine($"GetContrast - Monitor:{physicalMonitorHandle}, Min:{pdwMinimumContrast}, Max:{pdwMaximumContrast}, Current:{pdwCurrentContrast}");
 
 			return ret;
 		}

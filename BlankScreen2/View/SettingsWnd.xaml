@@ -90,6 +90,7 @@
 							<Run Text="Brightness and Contrast" />
 						</TextBlock>
 					</CheckBox>
+					<Button x:Name="ResetDisplay" Content="Reset Brightness/Contrast" Margin="4,2" ToolTip="Resets brightness and contrast to 75%" Click="ResetDisplay_Click" />
 				</StackPanel>
 			</GroupBox>
 		</StackPanel>

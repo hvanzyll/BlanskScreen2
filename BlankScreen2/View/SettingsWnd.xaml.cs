@@ -27,5 +27,10 @@ namespace BlankScreen2.View
 			_ScreenMgr.ShowBlankScreen();
 			this.Close();
 		}
+
+		private async void ResetDisplay_Click(object sender, RoutedEventArgs e)
+		{
+			await _ScreenMgr.ResetBrightnessContrast();
+		}
 	}
 }

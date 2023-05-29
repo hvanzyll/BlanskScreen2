@@ -53,18 +53,20 @@ namespace BlankScreen2.View
 
 			await Task.Run(() =>
 			{
-				_BlankScreenModel.DisplayEntry.Screen.GetMonitorCapabilities();
-				_BlankScreenModel.DisplayEntry.Screen.BackupMonitorCapabilities();
-				TurnDownBrightnessContrast();
+				bool ret = _BlankScreenModel.DisplayEntry.Screen.GetMonitorCapabilities();
+				if (ret)
+					_BlankScreenModel.DisplayEntry.Screen.BackupMonitorCapabilities();
 			});
+
+			await TurnDownBrightnessContrast();
 		}
 
-		private void Window_Closing(object sender, CancelEventArgs e)
+		private async void Window_Closing(object sender, CancelEventArgs e)
 		{
 			_Closing = true;
 			StopTimers();
 
-			_BlankScreenModel.DisplayEntry.Screen.RestoreMonitorCapabilities();
+			await _BlankScreenModel.DisplayEntry.Screen.RestoreMonitorCapabilities();
 		}
 
 		private void StopTimers()
@@ -74,16 +76,16 @@ namespace BlankScreen2.View
 			_ClockTickTimer?.Stop();
 		}
 
-		private void TurnDownBrightnessContrast()
+		private async Task TurnDownBrightnessContrast()
 		{
 			if (_BlankScreenModel.TurnDownBrightnessContrast)
 			{
-				_BlankScreenModel.DisplayEntry.Screen.SetBrightness(0);
-				_BlankScreenModel.DisplayEntry.Screen.SetContrast(0);
+				await _BlankScreenModel.DisplayEntry.Screen.SetBrightness(0);
+				await _BlankScreenModel.DisplayEntry.Screen.SetContrast(0);
 			}
 		}
 
-		private void Window_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+		private async void Window_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
 		{
 			StopTimers();
 
@@ -101,6 +103,9 @@ namespace BlankScreen2.View
 			cm.Items.Add(CreateMenu("Exit", MenuItem_ExitClick));
 			cm.Closed += Cm_Closed;
 			cm.IsOpen = true;
+
+			if (_BlankScreenModel.DisplayEntry.Screen.NeedsRestore())
+				await _BlankScreenModel.DisplayEntry.Screen.RestoreMonitorCapabilities();
 		}
 
 		private void Cm_Closed(object sender, RoutedEventArgs e)
@@ -159,7 +164,7 @@ namespace BlankScreen2.View
 			this.Close();
 		}
 
-		private void Window_MouseMove(object sender, MouseEventArgs e)
+		private async void Window_MouseMove(object sender, MouseEventArgs e)
 		{
 			Point mousePos = e.GetPosition(this);
 			if (MouseMoved(mousePos) == true)
@@ -167,11 +172,12 @@ namespace BlankScreen2.View
 				StartTimer(ref _MousePointerTimer, 5, MousePointerTimer_Tick);
 
 				ShowMouse(true);
-				_BlankScreenModel.DisplayEntry.Screen.RestoreMonitorCapabilities();
+				if (_BlankScreenModel.DisplayEntry.Screen.NeedsRestore())
+					await _BlankScreenModel.DisplayEntry.Screen.RestoreMonitorCapabilities();
 			}
 		}
 
-		private void StartTimer(ref DispatcherTimer? dispatcherTimer, int intervalSec, EventHandler eventHandler)
+		private static void StartTimer(ref DispatcherTimer? dispatcherTimer, int intervalSec, EventHandler eventHandler)
 		{
 			dispatcherTimer?.Stop();
 			dispatcherTimer = new DispatcherTimer();
@@ -199,14 +205,14 @@ namespace BlankScreen2.View
 			_BlankScreenModel.ShowDetails = false;
 		}
 
-		private void MousePointerTimer_Tick(object? sender, EventArgs e)
+		private async void MousePointerTimer_Tick(object? sender, EventArgs e)
 		{
 			if (!(sender is DispatcherTimer dispatcherTimer))
 				return;
 
 			dispatcherTimer.Stop();
 			ShowMouse(false);
-			TurnDownBrightnessContrast();
+			await TurnDownBrightnessContrast();
 		}
 
 		private bool MouseMoved(Point currentPos)

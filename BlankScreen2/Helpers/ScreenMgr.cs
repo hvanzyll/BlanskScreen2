@@ -3,6 +3,7 @@ using BlankScreen2.View;
 using HVWpfScreenHelper;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BlankScreen2.Helpers
 {
@@ -62,7 +63,7 @@ namespace BlankScreen2.Helpers
 				}
 				else
 				{
-					displayEntryFound.SetScreenData(screen);
+					displayEntryFound.Screen = screen;
 					displayEntryFound.Refreshed = true;
 				}
 			}
@@ -79,6 +80,16 @@ namespace BlankScreen2.Helpers
 			}
 
 			ShowSettingsWnd();
+		}
+
+		public async Task ResetBrightnessContrast()
+		{
+			for (int displayIndex = 0; displayIndex < _Settings.DisplayEntries.Count; displayIndex++)
+			{
+				DisplayEntry displayEntry = Settings.DisplayEntries[displayIndex];
+				await displayEntry.Screen.SetBrightness(75);
+				await displayEntry.Screen.SetContrast(75);
+			}
 		}
 
 		public void ShowSettingsWnd()

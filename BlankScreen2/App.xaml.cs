@@ -1,4 +1,5 @@
 ﻿using BlankScreen2.Helpers;
+using System;
 using System.Windows;
 
 namespace BlankScreen2
@@ -12,7 +13,21 @@ namespace BlankScreen2
 
 		public App()
 		{
-			_ScreenMgr.ShowWindow();
+			try
+			{
+				_ScreenMgr.ShowWindow();
+			}
+			catch (Exception ex)
+			{
+				ShowException(ex);
+			}
+		}
+
+		private static void ShowException(Exception ex)
+		{
+			string msg = "An unhandled exception occured.\n" +
+				ex.ToString();
+			MessageBox.Show(msg);
 		}
 	}
 }
