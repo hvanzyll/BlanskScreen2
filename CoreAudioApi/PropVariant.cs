@@ -26,74 +26,74 @@ using System.Runtime.InteropServices;
 
 namespace CoreAudioApi
 {
-    [StructLayout(LayoutKind.Explicit)]
-    public struct PropVariant
-    {
-        [FieldOffset(0)] private readonly short vt;
-        [FieldOffset(2)] private readonly short wReserved1;
-        [FieldOffset(4)] private readonly short wReserved2;
-        [FieldOffset(6)] private readonly short wReserved3;
-        [FieldOffset(8)] private readonly sbyte cVal;
-        [FieldOffset(8)] private readonly byte bVal;
-        [FieldOffset(8)] private readonly short iVal;
-        [FieldOffset(8)] private readonly ushort uiVal;
-        [FieldOffset(8)] private readonly int lVal;
-        [FieldOffset(8)] private readonly uint ulVal;
-        [FieldOffset(8)] private readonly long hVal;
-        [FieldOffset(8)] private readonly ulong uhVal;
-        [FieldOffset(8)] private readonly float fltVal;
-        [FieldOffset(8)] private readonly double dblVal;
-        [FieldOffset(8)] private Blob blobVal;
-        [FieldOffset(8)] private readonly DateTime date;
-        [FieldOffset(8)] private readonly bool boolVal;
-        [FieldOffset(8)] private readonly int scode;
-        [FieldOffset(8)] private System.Runtime.InteropServices.ComTypes.FILETIME filetime;
-        [FieldOffset(8)] private readonly IntPtr everything_else;
+	[StructLayout(LayoutKind.Explicit)]
+	public struct PropVariant
+	{
+		[FieldOffset(0)] private readonly short vt;
+		[FieldOffset(2)] private readonly short wReserved1;
+		[FieldOffset(4)] private readonly short wReserved2;
+		[FieldOffset(6)] private readonly short wReserved3;
+		[FieldOffset(8)] private readonly sbyte cVal;
+		[FieldOffset(8)] private readonly byte bVal;
+		[FieldOffset(8)] private readonly short iVal;
+		[FieldOffset(8)] private readonly ushort uiVal;
+		[FieldOffset(8)] private readonly int lVal;
+		[FieldOffset(8)] private readonly uint ulVal;
+		[FieldOffset(8)] private readonly long hVal;
+		[FieldOffset(8)] private readonly ulong uhVal;
+		[FieldOffset(8)] private readonly float fltVal;
+		[FieldOffset(8)] private readonly double dblVal;
+		[FieldOffset(8)] private Blob blobVal;
+		[FieldOffset(8)] private readonly DateTime date;
+		[FieldOffset(8)] private readonly bool boolVal;
+		[FieldOffset(8)] private readonly int scode;
+		[FieldOffset(8)] private System.Runtime.InteropServices.ComTypes.FILETIME filetime;
+		[FieldOffset(8)] private readonly IntPtr everything_else;
 
-        //I'm sure there is a more efficient way to do this but this works ..for now..
-        internal byte[] GetBlob()
-        {
-            byte[] Result = new byte[blobVal.Length];
-            for (int i = 0; i < blobVal.Length; i++)
-            {
-                Result[i] = Marshal.ReadByte((IntPtr)((long)(blobVal.Data) + i));
-            }
-            return Result;
-        }
+		//I'm sure there is a more efficient way to do this but this works ..for now..
+		internal byte[] GetBlob()
+		{
+			byte[] Result = new byte[blobVal.Length];
+			for (int i = 0; i < blobVal.Length; i++)
+			{
+				Result[i] = Marshal.ReadByte((IntPtr)((long)(blobVal.Data) + i));
+			}
+			return Result;
+		}
 
-        public object Value
-        {
-            get
-            {
-                VarEnum ve = (VarEnum)vt;
-                switch (ve)
-                {
-                    case VarEnum.VT_I1:
-                        return bVal;
+		public object Value
+		{
+			get
+			{
+				VarEnum ve = (VarEnum)vt;
+				switch (ve)
+				{
+					case VarEnum.VT_I1:
+						return bVal;
 
-                    case VarEnum.VT_I2:
-                        return iVal;
+					case VarEnum.VT_I2:
+						return iVal;
 
-                    case VarEnum.VT_I4:
-                        return lVal;
+					case VarEnum.VT_I4:
+						return lVal;
 
-                    case VarEnum.VT_I8:
-                        return hVal;
+					case VarEnum.VT_I8:
+						return hVal;
 
-                    case VarEnum.VT_INT:
-                        return iVal;
+					case VarEnum.VT_INT:
+						return iVal;
 
-                    case VarEnum.VT_UI4:
-                        return ulVal;
+					case VarEnum.VT_UI4:
+						return ulVal;
 
-                    case VarEnum.VT_LPWSTR:
-                        return Marshal.PtrToStringUni(everything_else);
+					case VarEnum.VT_LPWSTR:
+						return Marshal.PtrToStringUni(everything_else);
 
-                    case VarEnum.VT_BLOB:
-                        return GetBlob();
-                }
-                return "FIXME Type = " + ve.ToString();
-            }
-        }
-    }
+					case VarEnum.VT_BLOB:
+						return GetBlob();
+				}
+				return "FIXME Type = " + ve.ToString();
+			}
+		}
+	}
 }

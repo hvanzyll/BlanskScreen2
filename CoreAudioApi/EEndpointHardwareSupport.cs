@@ -24,11 +24,11 @@ using System;
 
 namespace CoreAudioApi
 {
-    [Flags]
-    public enum EEndpointHardwareSupport
-    {
-        Volume = 0x00000001,
-        Mute = 0x00000002,
-        Meter = 0x00000004
-    }
+	[Flags]
+	public enum EEndpointHardwareSupport
+	{
+		Volume = 0x00000001,
+		Mute = 0x00000002,
+		Meter = 0x00000004
+	}
 }

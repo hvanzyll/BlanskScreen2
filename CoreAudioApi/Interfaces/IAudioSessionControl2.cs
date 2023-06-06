@@ -25,52 +25,52 @@ using System.Runtime.InteropServices;
 
 namespace CoreAudioApi.Interfaces
 {
-    [Guid("bfb7ff88-7239-4fc9-8fa2-07c950be9c6d"),
-     InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-    internal interface IAudioSessionControl2
-    {
-        //IAudioSession functions
-        [PreserveSig]
-        int GetState(out AudioSessionState state);
+	[Guid("bfb7ff88-7239-4fc9-8fa2-07c950be9c6d"),
+	 InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+	internal interface IAudioSessionControl2
+	{
+		//IAudioSession functions
+		[PreserveSig]
+		int GetState(out AudioSessionState state);
 
-        [PreserveSig]
-        int GetDisplayName(out IntPtr name);
+		[PreserveSig]
+		int GetDisplayName(out IntPtr name);
 
-        [PreserveSig]
-        int SetDisplayName(string value, Guid EventContext);
+		[PreserveSig]
+		int SetDisplayName(string value, Guid EventContext);
 
-        [PreserveSig]
-        int GetIconPath(out IntPtr Path);
+		[PreserveSig]
+		int GetIconPath(out IntPtr Path);
 
-        [PreserveSig]
-        int SetIconPath(string Value, Guid EventContext);
+		[PreserveSig]
+		int SetIconPath(string Value, Guid EventContext);
 
-        [PreserveSig]
-        int GetGroupingParam(out Guid GroupingParam);
+		[PreserveSig]
+		int GetGroupingParam(out Guid GroupingParam);
 
-        [PreserveSig]
-        int SetGroupingParam(Guid Override, Guid Eventcontext);
+		[PreserveSig]
+		int SetGroupingParam(Guid Override, Guid Eventcontext);
 
-        [PreserveSig]
-        int RegisterAudioSessionNotification(IAudioSessionEvents NewNotifications);
+		[PreserveSig]
+		int RegisterAudioSessionNotification(IAudioSessionEvents NewNotifications);
 
-        [PreserveSig]
-        int UnregisterAudioSessionNotification(IAudioSessionEvents NewNotifications);
+		[PreserveSig]
+		int UnregisterAudioSessionNotification(IAudioSessionEvents NewNotifications);
 
-        //IAudioSession2 functions
-        [PreserveSig]
-        int GetSessionIdentifier(out IntPtr retVal);
+		//IAudioSession2 functions
+		[PreserveSig]
+		int GetSessionIdentifier(out IntPtr retVal);
 
-        [PreserveSig]
-        int GetSessionInstanceIdentifier(out IntPtr retVal);
+		[PreserveSig]
+		int GetSessionInstanceIdentifier(out IntPtr retVal);
 
-        [PreserveSig]
-        int GetProcessId(out UInt32 retvVal);
+		[PreserveSig]
+		int GetProcessId(out UInt32 retvVal);
 
-        [PreserveSig]
-        int IsSystemSoundsSession();
+		[PreserveSig]
+		int IsSystemSoundsSession();
 
-        [PreserveSig]
-        int SetDuckingPreference(bool optOut);
-    }
+		[PreserveSig]
+		int SetDuckingPreference(bool optOut);
+	}
 }

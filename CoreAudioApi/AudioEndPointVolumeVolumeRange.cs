@@ -25,39 +25,39 @@ using System.Runtime.InteropServices;
 
 namespace CoreAudioApi
 {
-    public class AudioEndPointVolumeVolumeRange
-    {
-        private readonly float _VolumeMindB;
-        private readonly float _VolumeMaxdB;
-        private readonly float _VolumeIncrementdB;
+	public class AudioEndPointVolumeVolumeRange
+	{
+		private readonly float _VolumeMindB;
+		private readonly float _VolumeMaxdB;
+		private readonly float _VolumeIncrementdB;
 
-        internal AudioEndPointVolumeVolumeRange(IAudioEndpointVolume parent)
-        {
-            Marshal.ThrowExceptionForHR(parent.GetVolumeRange(out _VolumeMindB, out _VolumeMaxdB, out _VolumeIncrementdB));
-        }
+		internal AudioEndPointVolumeVolumeRange(IAudioEndpointVolume parent)
+		{
+			Marshal.ThrowExceptionForHR(parent.GetVolumeRange(out _VolumeMindB, out _VolumeMaxdB, out _VolumeIncrementdB));
+		}
 
-        public float MindB
-        {
-            get
-            {
-                return _VolumeMindB;
-            }
-        }
+		public float MindB
+		{
+			get
+			{
+				return _VolumeMindB;
+			}
+		}
 
-        public float MaxdB
-        {
-            get
-            {
-                return _VolumeMaxdB;
-            }
-        }
+		public float MaxdB
+		{
+			get
+			{
+				return _VolumeMaxdB;
+			}
+		}
 
-        public float IncrementdB
-        {
-            get
-            {
-                return _VolumeIncrementdB;
-            }
-        }
-    }
+		public float IncrementdB
+		{
+			get
+			{
+				return _VolumeIncrementdB;
+			}
+		}
+	}
 }

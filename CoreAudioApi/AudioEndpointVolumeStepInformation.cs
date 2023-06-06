@@ -25,30 +25,30 @@ using System.Runtime.InteropServices;
 
 namespace CoreAudioApi
 {
-    public class AudioEndpointVolumeStepInformation
-    {
-        private readonly uint _Step;
-        private readonly uint _StepCount;
+	public class AudioEndpointVolumeStepInformation
+	{
+		private readonly uint _Step;
+		private readonly uint _StepCount;
 
-        internal AudioEndpointVolumeStepInformation(IAudioEndpointVolume parent)
-        {
-            Marshal.ThrowExceptionForHR(parent.GetVolumeStepInfo(out _Step, out _StepCount));
-        }
+		internal AudioEndpointVolumeStepInformation(IAudioEndpointVolume parent)
+		{
+			Marshal.ThrowExceptionForHR(parent.GetVolumeStepInfo(out _Step, out _StepCount));
+		}
 
-        public uint Step
-        {
-            get
-            {
-                return _Step;
-            }
-        }
+		public uint Step
+		{
+			get
+			{
+				return _Step;
+			}
+		}
 
-        public uint StepCount
-        {
-            get
-            {
-                return _StepCount;
-            }
-        }
-    }
+		public uint StepCount
+		{
+			get
+			{
+				return _StepCount;
+			}
+		}
+	}
 }

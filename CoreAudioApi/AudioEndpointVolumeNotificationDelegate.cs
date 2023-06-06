@@ -22,5 +22,5 @@
 
 namespace CoreAudioApi
 {
-    public delegate void AudioEndpointVolumeNotificationDelegate(AudioVolumeNotificationData data);
+	public delegate void AudioEndpointVolumeNotificationDelegate(AudioVolumeNotificationData data);
 }

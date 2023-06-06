@@ -25,25 +25,25 @@ using System.Runtime.InteropServices;
 
 namespace CoreAudioApi
 {
-    public class AudioSessionManager
-    {
-        private readonly IAudioSessionManager2 _AudioSessionManager;
-        private readonly SessionCollection _Sessions;
+	public class AudioSessionManager
+	{
+		private readonly IAudioSessionManager2 _AudioSessionManager;
+		private readonly SessionCollection _Sessions;
 
-        internal AudioSessionManager(IAudioSessionManager2 realAudioSessionManager)
-        {
-            _AudioSessionManager = realAudioSessionManager;
-            IAudioSessionEnumerator _SessionEnum;
-            Marshal.ThrowExceptionForHR(_AudioSessionManager.GetSessionEnumerator(out _SessionEnum));
-            _Sessions = new SessionCollection(_SessionEnum);
-        }
+		internal AudioSessionManager(IAudioSessionManager2 realAudioSessionManager)
+		{
+			_AudioSessionManager = realAudioSessionManager;
+			IAudioSessionEnumerator _SessionEnum;
+			Marshal.ThrowExceptionForHR(_AudioSessionManager.GetSessionEnumerator(out _SessionEnum));
+			_Sessions = new SessionCollection(_SessionEnum);
+		}
 
-        public SessionCollection Sessions
-        {
-            get
-            {
-                return _Sessions;
-            }
-        }
-    }
+		public SessionCollection Sessions
+		{
+			get
+			{
+				return _Sessions;
+			}
+		}
+	}
 }

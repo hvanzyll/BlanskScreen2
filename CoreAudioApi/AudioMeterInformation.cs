@@ -25,46 +25,46 @@ using System.Runtime.InteropServices;
 
 namespace CoreAudioApi
 {
-    public class AudioMeterInformation
-    {
-        private readonly IAudioMeterInformation _AudioMeterInformation;
-        private readonly EEndpointHardwareSupport _HardwareSupport;
-        private readonly AudioMeterInformationChannels _Channels;
+	public class AudioMeterInformation
+	{
+		private readonly IAudioMeterInformation _AudioMeterInformation;
+		private readonly EEndpointHardwareSupport _HardwareSupport;
+		private readonly AudioMeterInformationChannels _Channels;
 
-        internal AudioMeterInformation(IAudioMeterInformation realInterface)
-        {
-            int HardwareSupp;
+		internal AudioMeterInformation(IAudioMeterInformation realInterface)
+		{
+			int HardwareSupp;
 
-            _AudioMeterInformation = realInterface;
-            Marshal.ThrowExceptionForHR(_AudioMeterInformation.QueryHardwareSupport(out HardwareSupp));
-            _HardwareSupport = (EEndpointHardwareSupport)HardwareSupp;
-            _Channels = new AudioMeterInformationChannels(_AudioMeterInformation);
-        }
+			_AudioMeterInformation = realInterface;
+			Marshal.ThrowExceptionForHR(_AudioMeterInformation.QueryHardwareSupport(out HardwareSupp));
+			_HardwareSupport = (EEndpointHardwareSupport)HardwareSupp;
+			_Channels = new AudioMeterInformationChannels(_AudioMeterInformation);
+		}
 
-        public AudioMeterInformationChannels PeakValues
-        {
-            get
-            {
-                return _Channels;
-            }
-        }
+		public AudioMeterInformationChannels PeakValues
+		{
+			get
+			{
+				return _Channels;
+			}
+		}
 
-        public EEndpointHardwareSupport HardwareSupport
-        {
-            get
-            {
-                return _HardwareSupport;
-            }
-        }
+		public EEndpointHardwareSupport HardwareSupport
+		{
+			get
+			{
+				return _HardwareSupport;
+			}
+		}
 
-        public float MasterPeakValue
-        {
-            get
-            {
-                float result;
-                Marshal.ThrowExceptionForHR(_AudioMeterInformation.GetPeakValue(out result));
-                return result;
-            }
-        }
-    }
+		public float MasterPeakValue
+		{
+			get
+			{
+				float result;
+				Marshal.ThrowExceptionForHR(_AudioMeterInformation.GetPeakValue(out result));
+				return result;
+			}
+		}
+	}
 }

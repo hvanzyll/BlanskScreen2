@@ -26,43 +26,43 @@ using System.Runtime.InteropServices;
 
 namespace CoreAudioApi
 {
-    public class AudioEndpointVolumeChannel
-    {
-        private readonly uint _Channel;
-        private readonly IAudioEndpointVolume _AudioEndpointVolume;
+	public class AudioEndpointVolumeChannel
+	{
+		private readonly uint _Channel;
+		private readonly IAudioEndpointVolume _AudioEndpointVolume;
 
-        internal AudioEndpointVolumeChannel(IAudioEndpointVolume parent, int channel)
-        {
-            _Channel = (uint)channel;
-            _AudioEndpointVolume = parent;
-        }
+		internal AudioEndpointVolumeChannel(IAudioEndpointVolume parent, int channel)
+		{
+			_Channel = (uint)channel;
+			_AudioEndpointVolume = parent;
+		}
 
-        public float VolumeLevel
-        {
-            get
-            {
-                float result;
-                Marshal.ThrowExceptionForHR(_AudioEndpointVolume.GetChannelVolumeLevel(_Channel, out result));
-                return result;
-            }
-            set
-            {
-                Marshal.ThrowExceptionForHR(_AudioEndpointVolume.SetChannelVolumeLevel(_Channel, value, Guid.Empty));
-            }
-        }
+		public float VolumeLevel
+		{
+			get
+			{
+				float result;
+				Marshal.ThrowExceptionForHR(_AudioEndpointVolume.GetChannelVolumeLevel(_Channel, out result));
+				return result;
+			}
+			set
+			{
+				Marshal.ThrowExceptionForHR(_AudioEndpointVolume.SetChannelVolumeLevel(_Channel, value, Guid.Empty));
+			}
+		}
 
-        public float VolumeLevelScalar
-        {
-            get
-            {
-                float result;
-                Marshal.ThrowExceptionForHR(_AudioEndpointVolume.GetChannelVolumeLevelScalar(_Channel, out result));
-                return result;
-            }
-            set
-            {
-                Marshal.ThrowExceptionForHR(_AudioEndpointVolume.SetChannelVolumeLevelScalar(_Channel, value, Guid.Empty));
-            }
-        }
-    }
+		public float VolumeLevelScalar
+		{
+			get
+			{
+				float result;
+				Marshal.ThrowExceptionForHR(_AudioEndpointVolume.GetChannelVolumeLevelScalar(_Channel, out result));
+				return result;
+			}
+			set
+			{
+				Marshal.ThrowExceptionForHR(_AudioEndpointVolume.SetChannelVolumeLevelScalar(_Channel, value, Guid.Empty));
+			}
+		}
+	}
 }

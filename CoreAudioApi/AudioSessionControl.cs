@@ -26,123 +26,123 @@ using System.Runtime.InteropServices;
 
 namespace CoreAudioApi
 {
-    public class AudioSessionControl
-    {
-        internal IAudioSessionControl2 _AudioSessionControl;
-        internal AudioMeterInformation _AudioMeterInformation;
-        internal SimpleAudioVolume _SimpleAudioVolume;
+	public class AudioSessionControl
+	{
+		internal IAudioSessionControl2 _AudioSessionControl;
+		internal AudioMeterInformation _AudioMeterInformation;
+		internal SimpleAudioVolume _SimpleAudioVolume;
 
-        public AudioMeterInformation AudioMeterInformation
-        {
-            get
-            {
-                return _AudioMeterInformation;
-            }
-        }
+		public AudioMeterInformation AudioMeterInformation
+		{
+			get
+			{
+				return _AudioMeterInformation;
+			}
+		}
 
-        public SimpleAudioVolume SimpleAudioVolume
-        {
-            get
-            {
-                return _SimpleAudioVolume;
-            }
-        }
+		public SimpleAudioVolume SimpleAudioVolume
+		{
+			get
+			{
+				return _SimpleAudioVolume;
+			}
+		}
 
-        internal AudioSessionControl(IAudioSessionControl2 realAudioSessionControl)
-        {
-            IAudioMeterInformation _meters = realAudioSessionControl as IAudioMeterInformation;
-            ISimpleAudioVolume _volume = realAudioSessionControl as ISimpleAudioVolume;
-            if (_meters != null)
-                _AudioMeterInformation = new CoreAudioApi.AudioMeterInformation(_meters);
-            if (_volume != null)
-                _SimpleAudioVolume = new SimpleAudioVolume(_volume);
-            _AudioSessionControl = realAudioSessionControl;
-        }
+		internal AudioSessionControl(IAudioSessionControl2 realAudioSessionControl)
+		{
+			IAudioMeterInformation _meters = realAudioSessionControl as IAudioMeterInformation;
+			ISimpleAudioVolume _volume = realAudioSessionControl as ISimpleAudioVolume;
+			if (_meters != null)
+				_AudioMeterInformation = new CoreAudioApi.AudioMeterInformation(_meters);
+			if (_volume != null)
+				_SimpleAudioVolume = new SimpleAudioVolume(_volume);
+			_AudioSessionControl = realAudioSessionControl;
+		}
 
-        public void RegisterAudioSessionNotification(IAudioSessionEvents eventConsumer)
-        {
-            Marshal.ThrowExceptionForHR(_AudioSessionControl.RegisterAudioSessionNotification(eventConsumer));
-        }
+		public void RegisterAudioSessionNotification(IAudioSessionEvents eventConsumer)
+		{
+			Marshal.ThrowExceptionForHR(_AudioSessionControl.RegisterAudioSessionNotification(eventConsumer));
+		}
 
-        public void UnregisterAudioSessionNotification(IAudioSessionEvents eventConsumer)
-        {
-            Marshal.ThrowExceptionForHR(_AudioSessionControl.UnregisterAudioSessionNotification(eventConsumer));
-        }
+		public void UnregisterAudioSessionNotification(IAudioSessionEvents eventConsumer)
+		{
+			Marshal.ThrowExceptionForHR(_AudioSessionControl.UnregisterAudioSessionNotification(eventConsumer));
+		}
 
-        public AudioSessionState State
-        {
-            get
-            {
-                AudioSessionState res;
-                Marshal.ThrowExceptionForHR(_AudioSessionControl.GetState(out res));
-                return res;
-            }
-        }
+		public AudioSessionState State
+		{
+			get
+			{
+				AudioSessionState res;
+				Marshal.ThrowExceptionForHR(_AudioSessionControl.GetState(out res));
+				return res;
+			}
+		}
 
-        public string DisplayName
-        {
-            get
-            {
-                IntPtr NamePtr;
-                Marshal.ThrowExceptionForHR(_AudioSessionControl.GetDisplayName(out NamePtr));
-                string res = Marshal.PtrToStringAuto(NamePtr);
-                Marshal.FreeCoTaskMem(NamePtr);
-                return res;
-            }
-        }
+		public string DisplayName
+		{
+			get
+			{
+				IntPtr NamePtr;
+				Marshal.ThrowExceptionForHR(_AudioSessionControl.GetDisplayName(out NamePtr));
+				string res = Marshal.PtrToStringAuto(NamePtr);
+				Marshal.FreeCoTaskMem(NamePtr);
+				return res;
+			}
+		}
 
-        public string IconPath
-        {
-            get
-            {
-                IntPtr NamePtr;
-                Marshal.ThrowExceptionForHR(_AudioSessionControl.GetIconPath(out NamePtr));
-                string res = Marshal.PtrToStringAuto(NamePtr);
-                Marshal.FreeCoTaskMem(NamePtr);
-                return res;
-            }
-        }
+		public string IconPath
+		{
+			get
+			{
+				IntPtr NamePtr;
+				Marshal.ThrowExceptionForHR(_AudioSessionControl.GetIconPath(out NamePtr));
+				string res = Marshal.PtrToStringAuto(NamePtr);
+				Marshal.FreeCoTaskMem(NamePtr);
+				return res;
+			}
+		}
 
-        public string SessionIdentifier
-        {
-            get
-            {
-                IntPtr NamePtr;
-                Marshal.ThrowExceptionForHR(_AudioSessionControl.GetSessionIdentifier(out NamePtr));
-                string res = Marshal.PtrToStringAuto(NamePtr);
-                Marshal.FreeCoTaskMem(NamePtr);
-                return res;
-            }
-        }
+		public string SessionIdentifier
+		{
+			get
+			{
+				IntPtr NamePtr;
+				Marshal.ThrowExceptionForHR(_AudioSessionControl.GetSessionIdentifier(out NamePtr));
+				string res = Marshal.PtrToStringAuto(NamePtr);
+				Marshal.FreeCoTaskMem(NamePtr);
+				return res;
+			}
+		}
 
-        public string SessionInstanceIdentifier
-        {
-            get
-            {
-                IntPtr NamePtr;
-                Marshal.ThrowExceptionForHR(_AudioSessionControl.GetSessionInstanceIdentifier(out NamePtr));
-                string res = Marshal.PtrToStringAuto(NamePtr);
-                Marshal.FreeCoTaskMem(NamePtr);
-                return res;
-            }
-        }
+		public string SessionInstanceIdentifier
+		{
+			get
+			{
+				IntPtr NamePtr;
+				Marshal.ThrowExceptionForHR(_AudioSessionControl.GetSessionInstanceIdentifier(out NamePtr));
+				string res = Marshal.PtrToStringAuto(NamePtr);
+				Marshal.FreeCoTaskMem(NamePtr);
+				return res;
+			}
+		}
 
-        public uint ProcessID
-        {
-            get
-            {
-                uint pid;
-                Marshal.ThrowExceptionForHR(_AudioSessionControl.GetProcessId(out pid));
-                return pid;
-            }
-        }
+		public uint ProcessID
+		{
+			get
+			{
+				uint pid;
+				Marshal.ThrowExceptionForHR(_AudioSessionControl.GetProcessId(out pid));
+				return pid;
+			}
+		}
 
-        public bool IsSystemIsSystemSoundsSession
-        {
-            get
-            {
-                return (_AudioSessionControl.IsSystemSoundsSession() == 0);  //S_OK
-            }
-        }
-    }
+		public bool IsSystemIsSystemSoundsSession
+		{
+			get
+			{
+				return (_AudioSessionControl.IsSystemSoundsSession() == 0);  //S_OK
+			}
+		}
+	}
 }

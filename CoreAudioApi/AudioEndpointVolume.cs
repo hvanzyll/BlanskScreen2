@@ -20,9 +20,9 @@
   3. This notice may not be removed or altered from any source distribution.
 */
 
+using CoreAudioApi.Interfaces;
 using System;
 using System.Runtime.InteropServices;
-using CoreAudioApi.Interfaces;
 
 namespace CoreAudioApi
 {

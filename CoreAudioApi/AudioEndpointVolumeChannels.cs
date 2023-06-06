@@ -25,40 +25,40 @@ using System.Runtime.InteropServices;
 
 namespace CoreAudioApi
 {
-    public class AudioEndpointVolumeChannels
-    {
-        private readonly IAudioEndpointVolume _AudioEndPointVolume;
-        private readonly AudioEndpointVolumeChannel[] _Channels;
+	public class AudioEndpointVolumeChannels
+	{
+		private readonly IAudioEndpointVolume _AudioEndPointVolume;
+		private readonly AudioEndpointVolumeChannel[] _Channels;
 
-        public int Count
-        {
-            get
-            {
-                int result;
-                Marshal.ThrowExceptionForHR(_AudioEndPointVolume.GetChannelCount(out result));
-                return result;
-            }
-        }
+		public int Count
+		{
+			get
+			{
+				int result;
+				Marshal.ThrowExceptionForHR(_AudioEndPointVolume.GetChannelCount(out result));
+				return result;
+			}
+		}
 
-        public AudioEndpointVolumeChannel this[int index]
-        {
-            get
-            {
-                return _Channels[index];
-            }
-        }
+		public AudioEndpointVolumeChannel this[int index]
+		{
+			get
+			{
+				return _Channels[index];
+			}
+		}
 
-        internal AudioEndpointVolumeChannels(IAudioEndpointVolume parent)
-        {
-            int ChannelCount;
-            _AudioEndPointVolume = parent;
+		internal AudioEndpointVolumeChannels(IAudioEndpointVolume parent)
+		{
+			int ChannelCount;
+			_AudioEndPointVolume = parent;
 
-            ChannelCount = Count;
-            _Channels = new AudioEndpointVolumeChannel[ChannelCount];
-            for (int i = 0; i < ChannelCount; i++)
-            {
-                _Channels[i] = new AudioEndpointVolumeChannel(_AudioEndPointVolume, i);
-            }
-        }
-    }
+			ChannelCount = Count;
+			_Channels = new AudioEndpointVolumeChannel[ChannelCount];
+			for (int i = 0; i < ChannelCount; i++)
+			{
+				_Channels[i] = new AudioEndpointVolumeChannel(_AudioEndPointVolume, i);
+			}
+		}
+	}
 }

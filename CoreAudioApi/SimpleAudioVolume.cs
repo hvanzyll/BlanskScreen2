@@ -26,43 +26,43 @@ using System.Runtime.InteropServices;
 
 namespace CoreAudioApi
 {
-    public class SimpleAudioVolume
-    {
-        private readonly ISimpleAudioVolume _SimpleAudioVolume;
+	public class SimpleAudioVolume
+	{
+		private readonly ISimpleAudioVolume _SimpleAudioVolume;
 
-        internal SimpleAudioVolume(ISimpleAudioVolume realSimpleVolume)
-        {
-            _SimpleAudioVolume = realSimpleVolume;
-        }
+		internal SimpleAudioVolume(ISimpleAudioVolume realSimpleVolume)
+		{
+			_SimpleAudioVolume = realSimpleVolume;
+		}
 
-        public float MasterVolume
-        {
-            get
-            {
-                float ret;
-                Marshal.ThrowExceptionForHR(_SimpleAudioVolume.GetMasterVolume(out ret));
-                return ret;
-            }
-            set
-            {
-                Guid Empty = Guid.Empty;
-                Marshal.ThrowExceptionForHR(_SimpleAudioVolume.SetMasterVolume(value, ref Empty));
-            }
-        }
+		public float MasterVolume
+		{
+			get
+			{
+				float ret;
+				Marshal.ThrowExceptionForHR(_SimpleAudioVolume.GetMasterVolume(out ret));
+				return ret;
+			}
+			set
+			{
+				Guid Empty = Guid.Empty;
+				Marshal.ThrowExceptionForHR(_SimpleAudioVolume.SetMasterVolume(value, ref Empty));
+			}
+		}
 
-        public bool Mute
-        {
-            get
-            {
-                bool ret;
-                Marshal.ThrowExceptionForHR(_SimpleAudioVolume.GetMute(out ret));
-                return ret;
-            }
-            set
-            {
-                Guid Empty = Guid.Empty;
-                Marshal.ThrowExceptionForHR(_SimpleAudioVolume.SetMute(value, ref Empty));
-            }
-        }
-    }
+		public bool Mute
+		{
+			get
+			{
+				bool ret;
+				Marshal.ThrowExceptionForHR(_SimpleAudioVolume.GetMute(out ret));
+				return ret;
+			}
+			set
+			{
+				Guid Empty = Guid.Empty;
+				Marshal.ThrowExceptionForHR(_SimpleAudioVolume.SetMute(value, ref Empty));
+			}
+		}
+	}
 }

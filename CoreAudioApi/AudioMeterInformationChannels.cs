@@ -25,35 +25,35 @@ using System.Runtime.InteropServices;
 
 namespace CoreAudioApi
 {
-    public class AudioMeterInformationChannels
-    {
-        private readonly IAudioMeterInformation _AudioMeterInformation;
+	public class AudioMeterInformationChannels
+	{
+		private readonly IAudioMeterInformation _AudioMeterInformation;
 
-        public int Count
-        {
-            get
-            {
-                int result;
-                Marshal.ThrowExceptionForHR(_AudioMeterInformation.GetMeteringChannelCount(out result));
-                return result;
-            }
-        }
+		public int Count
+		{
+			get
+			{
+				int result;
+				Marshal.ThrowExceptionForHR(_AudioMeterInformation.GetMeteringChannelCount(out result));
+				return result;
+			}
+		}
 
-        public float this[int index]
-        {
-            get
-            {
-                float[] peakValues = new float[Count];
-                GCHandle Params = GCHandle.Alloc(peakValues, GCHandleType.Pinned);
-                Marshal.ThrowExceptionForHR(_AudioMeterInformation.GetChannelsPeakValues(peakValues.Length, Params.AddrOfPinnedObject()));
-                Params.Free();
-                return peakValues[index];
-            }
-        }
+		public float this[int index]
+		{
+			get
+			{
+				float[] peakValues = new float[Count];
+				GCHandle Params = GCHandle.Alloc(peakValues, GCHandleType.Pinned);
+				Marshal.ThrowExceptionForHR(_AudioMeterInformation.GetChannelsPeakValues(peakValues.Length, Params.AddrOfPinnedObject()));
+				Params.Free();
+				return peakValues[index];
+			}
+		}
 
-        internal AudioMeterInformationChannels(IAudioMeterInformation parent)
-        {
-            _AudioMeterInformation = parent;
-        }
-    }
+		internal AudioMeterInformationChannels(IAudioMeterInformation parent)
+		{
+			_AudioMeterInformation = parent;
+		}
+	}
 }

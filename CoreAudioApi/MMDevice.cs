@@ -26,158 +26,158 @@ using System.Runtime.InteropServices;
 
 namespace CoreAudioApi
 {
-    public class MMDevice
-    {
-        #region Variables
+	public class MMDevice
+	{
+		#region Variables
 
-        private readonly IMMDevice _RealDevice;
-        private PropertyStore _PropertyStore;
-        private AudioMeterInformation _AudioMeterInformation;
-        private AudioEndpointVolume _AudioEndpointVolume;
-        private AudioSessionManager _AudioSessionManager;
+		private readonly IMMDevice _RealDevice;
+		private PropertyStore _PropertyStore;
+		private AudioMeterInformation _AudioMeterInformation;
+		private AudioEndpointVolume _AudioEndpointVolume;
+		private AudioSessionManager _AudioSessionManager;
 
-        #endregion Variables
+		#endregion Variables
 
-        #region Guids
+		#region Guids
 
-        private static Guid IID_IAudioMeterInformation = typeof(IAudioMeterInformation).GUID;
-        private static Guid IID_IAudioEndpointVolume = typeof(IAudioEndpointVolume).GUID;
-        private static Guid IID_IAudioSessionManager = typeof(IAudioSessionManager2).GUID;
+		private static Guid IID_IAudioMeterInformation = typeof(IAudioMeterInformation).GUID;
+		private static Guid IID_IAudioEndpointVolume = typeof(IAudioEndpointVolume).GUID;
+		private static Guid IID_IAudioSessionManager = typeof(IAudioSessionManager2).GUID;
 
-        #endregion Guids
+		#endregion Guids
 
-        #region Init
+		#region Init
 
-        private void GetPropertyInformation()
-        {
-            IPropertyStore propstore;
-            Marshal.ThrowExceptionForHR(_RealDevice.OpenPropertyStore(EStgmAccess.STGM_READ, out propstore));
-            _PropertyStore = new PropertyStore(propstore);
-        }
+		private void GetPropertyInformation()
+		{
+			IPropertyStore propstore;
+			Marshal.ThrowExceptionForHR(_RealDevice.OpenPropertyStore(EStgmAccess.STGM_READ, out propstore));
+			_PropertyStore = new PropertyStore(propstore);
+		}
 
-        private void GetAudioSessionManager()
-        {
-            object result;
-            Marshal.ThrowExceptionForHR(_RealDevice.Activate(ref IID_IAudioSessionManager, CLSCTX.ALL, IntPtr.Zero, out result));
-            _AudioSessionManager = new AudioSessionManager(result as IAudioSessionManager2);
-        }
+		private void GetAudioSessionManager()
+		{
+			object result;
+			Marshal.ThrowExceptionForHR(_RealDevice.Activate(ref IID_IAudioSessionManager, CLSCTX.ALL, IntPtr.Zero, out result));
+			_AudioSessionManager = new AudioSessionManager(result as IAudioSessionManager2);
+		}
 
-        private void GetAudioMeterInformation()
-        {
-            object result;
-            Marshal.ThrowExceptionForHR(_RealDevice.Activate(ref IID_IAudioMeterInformation, CLSCTX.ALL, IntPtr.Zero, out result));
-            _AudioMeterInformation = new AudioMeterInformation(result as IAudioMeterInformation);
-        }
+		private void GetAudioMeterInformation()
+		{
+			object result;
+			Marshal.ThrowExceptionForHR(_RealDevice.Activate(ref IID_IAudioMeterInformation, CLSCTX.ALL, IntPtr.Zero, out result));
+			_AudioMeterInformation = new AudioMeterInformation(result as IAudioMeterInformation);
+		}
 
-        private void GetAudioEndpointVolume()
-        {
-            object result;
-            Marshal.ThrowExceptionForHR(_RealDevice.Activate(ref IID_IAudioEndpointVolume, CLSCTX.ALL, IntPtr.Zero, out result));
+		private void GetAudioEndpointVolume()
+		{
+			object result;
+			Marshal.ThrowExceptionForHR(_RealDevice.Activate(ref IID_IAudioEndpointVolume, CLSCTX.ALL, IntPtr.Zero, out result));
 			_AudioEndpointVolume = new AudioEndpointVolume(result as IAudioEndpointVolume, this);
-        }
+		}
 
-        #endregion Init
+		#endregion Init
 
-        #region Properties
+		#region Properties
 
-        public AudioSessionManager AudioSessionManager
-        {
-            get
-            {
-                if (_AudioSessionManager == null)
-                    GetAudioSessionManager();
+		public AudioSessionManager AudioSessionManager
+		{
+			get
+			{
+				if (_AudioSessionManager == null)
+					GetAudioSessionManager();
 
-                return _AudioSessionManager;
-            }
-        }
+				return _AudioSessionManager;
+			}
+		}
 
-        public AudioMeterInformation AudioMeterInformation
-        {
-            get
-            {
-                if (_AudioMeterInformation == null)
-                    GetAudioMeterInformation();
+		public AudioMeterInformation AudioMeterInformation
+		{
+			get
+			{
+				if (_AudioMeterInformation == null)
+					GetAudioMeterInformation();
 
-                return _AudioMeterInformation;
-            }
-        }
+				return _AudioMeterInformation;
+			}
+		}
 
-        public AudioEndpointVolume AudioEndpointVolume
-        {
-            get
-            {
-                if (_AudioEndpointVolume == null)
-                    GetAudioEndpointVolume();
+		public AudioEndpointVolume AudioEndpointVolume
+		{
+			get
+			{
+				if (_AudioEndpointVolume == null)
+					GetAudioEndpointVolume();
 
-                return _AudioEndpointVolume;
-            }
-        }
+				return _AudioEndpointVolume;
+			}
+		}
 
-        public PropertyStore Properties
-        {
-            get
-            {
-                if (_PropertyStore == null)
-                    GetPropertyInformation();
-                return _PropertyStore;
-            }
-        }
+		public PropertyStore Properties
+		{
+			get
+			{
+				if (_PropertyStore == null)
+					GetPropertyInformation();
+				return _PropertyStore;
+			}
+		}
 
-        public string FriendlyName
-        {
-            get
-            {
-                if (_PropertyStore == null)
-                    GetPropertyInformation();
-                if (_PropertyStore.Contains(PKEY.PKEY_DeviceInterface_FriendlyName))
-                {
-                    return (string)_PropertyStore[PKEY.PKEY_DeviceInterface_FriendlyName].Value;
-                }
-                else
-                    return "Unknown";
-            }
-        }
+		public string FriendlyName
+		{
+			get
+			{
+				if (_PropertyStore == null)
+					GetPropertyInformation();
+				if (_PropertyStore.Contains(PKEY.PKEY_DeviceInterface_FriendlyName))
+				{
+					return (string)_PropertyStore[PKEY.PKEY_DeviceInterface_FriendlyName].Value;
+				}
+				else
+					return "Unknown";
+			}
+		}
 
-        public string ID
-        {
-            get
-            {
-                string Result;
-                Marshal.ThrowExceptionForHR(_RealDevice.GetId(out Result));
-                return Result;
-            }
-        }
+		public string ID
+		{
+			get
+			{
+				string Result;
+				Marshal.ThrowExceptionForHR(_RealDevice.GetId(out Result));
+				return Result;
+			}
+		}
 
-        public EDataFlow DataFlow
-        {
-            get
-            {
-                EDataFlow Result;
-                IMMEndpoint ep = _RealDevice as IMMEndpoint;
-                ep.GetDataFlow(out Result);
-                return Result;
-            }
-        }
+		public EDataFlow DataFlow
+		{
+			get
+			{
+				EDataFlow Result;
+				IMMEndpoint ep = _RealDevice as IMMEndpoint;
+				ep.GetDataFlow(out Result);
+				return Result;
+			}
+		}
 
-        public EDeviceState State
-        {
-            get
-            {
-                EDeviceState Result;
-                Marshal.ThrowExceptionForHR(_RealDevice.GetState(out Result));
-                return Result;
-            }
-        }
+		public EDeviceState State
+		{
+			get
+			{
+				EDeviceState Result;
+				Marshal.ThrowExceptionForHR(_RealDevice.GetState(out Result));
+				return Result;
+			}
+		}
 
-        #endregion Properties
+		#endregion Properties
 
-        #region Constructor
+		#region Constructor
 
-        internal MMDevice(IMMDevice realDevice)
-        {
-            _RealDevice = realDevice;
-        }
+		internal MMDevice(IMMDevice realDevice)
+		{
+			_RealDevice = realDevice;
+		}
 
-        #endregion Constructor
-    }
+		#endregion Constructor
+	}
 }
