@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="TestBrightness.MonitorCapsCtrl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:TestBrightness"
+             mc:Ignorable="d"
+             d:DesignHeight="500" d:DesignWidth="400">
+	<Grid>
+		<StackPanel Margin="2">
+			<CheckBox x:Name="CAPS_NONE" Content="CAPS__NONE" IsChecked="{Binding  MC_CAPS_NONE, Mode=OneWay}" />
+			<CheckBox x:Name="CAPS_MONITOR_TECHNOLOGY_TYPE" Content="CAPS__MONITOR__TECHNOLOGY__TYPE" IsChecked="{Binding  MC_CAPS_MONITOR_TECHNOLOGY_TYPE, Mode=OneWay}" />
+			<CheckBox x:Name="CAPS_BRIGHTNESS" Content="CAPS__BRIGHTNESS" IsChecked="{Binding  MC_CAPS_BRIGHTNESS, Mode=OneWay}" />
+			<CheckBox x:Name="CAPS_CONTRAST" Content="CAPS__CONTRAST" IsChecked="{Binding  MC_CAPS_CONTRAST, Mode=OneWay}" />
+			<CheckBox x:Name="CAPS_COLOR_TEMPERATURE" Content="CAPS__COLOR__TEMPERATURE" IsChecked="{Binding  MC_CAPS_COLOR_TEMPERATURE, Mode=OneWay}" />
+			<CheckBox x:Name="CAPS_RED_GREEN_BLUE_GAIN" Content="CAPS__RED__GREEN__BLUE__GAIN" IsChecked="{Binding  MC_CAPS_RED_GREEN_BLUE_GAIN, Mode=OneWay}" />
+			<CheckBox x:Name="CAPS_RED_GREEN_BLUE_DRIVE" Content="CAPS__RED__GREEN__BLUE__DRIVE" IsChecked="{Binding  MC_CAPS_RED_GREEN_BLUE_DRIVE, Mode=OneWay}" />
+			<CheckBox x:Name="CAPS_DEGAUSS" Content="CAPS__DEGAUSS" IsChecked="{Binding  MC_CAPS_DEGAUSS, Mode=OneWay}" />
+			<CheckBox x:Name="CAPS_DISPLAY_AREA_POSITION" Content="CAPS__DISPLAY__AREA__POSITION" IsChecked="{Binding  MC_CAPS_DISPLAY_AREA_POSITION, Mode=OneWay}" />
+			<CheckBox x:Name="CAPS_DISPLAY_AREA_SIZE" Content="CAPS__DISPLAY__AREA__SIZE" IsChecked="{Binding  MC_CAPS_DISPLAY_AREA_SIZE, Mode=OneWay}" />
+			<CheckBox x:Name="CAPS_RESTORE_FACTORY_DEFAULTS" Content="CAPS__RESTORE__FACTORY__DEFAULTS" IsChecked="{Binding  MC_CAPS_RESTORE_FACTORY_DEFAULTS, Mode=OneWay}" />
+			<CheckBox x:Name="CAPS_RESTORE_FACTORY_COLOR_DEFAULTS" Content="CAPS__RESTORE__FACTORY__COLOR__DEFAULTS" IsChecked="{Binding  MC_CAPS_RESTORE_FACTORY_COLOR_DEFAULTS, Mode=OneWay}" />
+			<CheckBox x:Name="RESTORE_FACTORY_DEFAULTS_ENABLES_MONITOR_SETTINGS" Content="RESTORE__FACTORY__DEFAULTS__ENABLES__MONITOR__SETTINGS" IsChecked="{Binding  MC_RESTORE_FACTORY_DEFAULTS_ENABLES_MONITOR_SETTINGS, Mode=OneWay}" />
+
+			<GroupBox Header="Brightness Settings" DataContext="{Binding BrightnessSettings}" IsEnabled="{Binding BrightnessSettings.SettingsSet}">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Column="0" Grid.Row="0" Text="Min:" Margin="2" />
+					<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding MinimumBrightness}" Margin="2" />
+
+					<TextBlock Grid.Column="0" Grid.Row="1" Text="Max:" Margin="2" />
+					<TextBox Grid.Column="1" Grid.Row="1" Text="{Binding MaximumBrightness}" Margin="2" />
+
+					<TextBlock Grid.Column="0" Grid.Row="2" Text="Current:" Margin="2" />
+					<TextBox Grid.Column="1" Grid.Row="2" Text="{Binding CurrentBrightness}" Margin="2" />
+					<Slider x:Name="BrightnessSlider" Grid.Column="2" Grid.Row="2"  Minimum="{Binding MinimumBrightness}" Maximum="{Binding MaximumBrightness}" Value="{Binding CurrentBrightness}" Margin="2" ValueChanged="BrightnessSlider_ValueChanged" />
+				</Grid>
+			</GroupBox>
+
+			<GroupBox Header="Contrast Settings" DataContext="{Binding ContrastSettings}" IsEnabled="{Binding ContrastSettings.SettingsSet}">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Column="0" Grid.Row="0" Text="Min:" Margin="2" />
+					<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding MinimumContrast}" Margin="2" />
+
+					<TextBlock Grid.Column="0" Grid.Row="1" Text="Max:" Margin="2" />
+					<TextBox Grid.Column="1" Grid.Row="1" Text="{Binding MaximumContrast}" Margin="2" />
+
+					<TextBlock Grid.Column="0" Grid.Row="2" Text="Current:" Margin="2" />
+					<TextBox Grid.Column="1" Grid.Row="2" Text="{Binding CurrentContrast}" Margin="2" />
+					<Slider x:Name="ConstrastSlider" Grid.Column="2" Grid.Row="2"  Minimum="{Binding MinimumContrast}" Maximum="{Binding MaximumContrast}" Value="{Binding CurrentContrast}" Margin="2" ValueChanged="ConstrastSlider_ValueChanged" />
+				</Grid>
+			</GroupBox>
+		</StackPanel>
+	</Grid>
+</UserControl>

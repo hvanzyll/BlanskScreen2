@@ -1,20 +1,21 @@
 ﻿namespace HVWpfScreenHelper
 {
-	public class BrightnessSettings
+	public class BrightnessSettings : NotifyPropertyChanged
 	{
-		private bool settingsSet { get; set; } = false;
-		public int MinimumBrightness { get; set; } = 0;
-		public int MaximumBrightness { get; set; } = 0;
-		public int CurrentBrightness { get; set; } = 0;
+		private bool _settingsSet;
+		private int _minimumBrightness;
+		private int _maximumBrightness;
+		private int _currentBrightness;
 
-		public void SettingsSet()
+		public bool settingsSet { get; private set; } = false;
+		public int MinimumBrightness { get => _minimumBrightness; set => SetField(ref _minimumBrightness, value); }
+		public int MaximumBrightness { get => _maximumBrightness; set => SetField(ref _maximumBrightness, value); }
+		public int CurrentBrightness { get => _currentBrightness; set => SetField(ref _currentBrightness, value); }
+		public bool SettingsSet { get => _settingsSet; private set => SetField(ref _settingsSet, value); }
+
+		public void SetSettingsSet()
 		{
 			settingsSet = true;
-		}
-
-		public bool AreSettingsSet()
-		{
-			return settingsSet;
 		}
 	}
 
