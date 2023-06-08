@@ -53,7 +53,7 @@ namespace BlankScreen2.View
 
 			await Task.Run(() =>
 			{
-				bool ret = _BlankScreenModel.DisplayEntry.Screen.GetMonitorCapabilities();
+				bool ret = _BlankScreenModel.DisplayEntry.Screen.RefreshMonitorCapabilities();
 				if (ret)
 					_BlankScreenModel.DisplayEntry.Screen.BackupMonitorCapabilities();
 			});
