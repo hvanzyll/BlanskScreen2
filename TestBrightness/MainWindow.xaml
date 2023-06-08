@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:TestBrightness"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
-	<Grid>
-		<TabControl x:Name="tabControl" ItemsSource="{Binding MonitorSettings}">
+	<Grid Margin="2">
+		<TabControl x:Name="tabControl" ItemsSource="{Binding MonitorSettings}" Margin="2">
 			<TabControl.ItemTemplate>
 				<DataTemplate>
 					<TextBlock Grid.Column="0" x:Name="_HeaderText" Text="{Binding DeviceName}" />
@@ -16,7 +16,6 @@
 			<TabControl.ContentTemplate>
 				<DataTemplate>
 					<Grid>
-						<TextBlock Text="test" />
 						<local:MonitorCapsCtrl x:Name="MonitorCapsCtrl" DataContext="{Binding}" />
 					</Grid>
 				</DataTemplate>

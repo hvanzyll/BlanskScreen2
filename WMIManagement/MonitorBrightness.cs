@@ -5,7 +5,7 @@ namespace WMIManagement
 {
 	public class MonitorBrightness
 	{
-		private int GetCurrentBrightness()
+		public static int GetCurrentBrightness()
 		{
 			//create a management scope object
 			ManagementScope scope = new ManagementScope("\\\\.\\ROOT\\WMI");
@@ -34,6 +34,20 @@ namespace WMIManagement
 			}
 
 			return -1;
+		}
+
+		public static void SetBrightness(int brightness)
+		{
+			using var mclass = new ManagementClass("WmiMonitorBrightnessMethods")
+			{
+				Scope = new ManagementScope(@"\\.\root\wmi")
+			};
+			using var instances = mclass.GetInstances();
+			var args = new object[] { 1, brightness };
+			foreach (ManagementObject instance in instances)
+			{
+				instance.InvokeMethod("WmiSetBrightness", args);
+			}
 		}
 	}
 }
