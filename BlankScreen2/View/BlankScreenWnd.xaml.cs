@@ -51,14 +51,17 @@ namespace BlankScreen2.View
 			this.WindowState = WindowState.Maximized;
 			_Closing = false;
 
-			await Task.Run(() =>
+			if (_BlankScreenModel.TurnDownBrightnessContrast)
 			{
-				bool ret = _BlankScreenModel.DisplayEntry.Screen.RefreshMonitorCapabilities();
-				if (ret)
-					_BlankScreenModel.DisplayEntry.Screen.BackupMonitorCapabilities();
-			});
+				await Task.Run(() =>
+				{
+					bool ret = _BlankScreenModel.DisplayEntry.Screen.RefreshMonitorCapabilities();
+					if (ret)
+						_BlankScreenModel.DisplayEntry.Screen.BackupMonitorCapabilities();
+				});
 
-			await TurnDownBrightnessContrast();
+				await TurnDownBrightnessContrast();
+			}
 		}
 
 		private async void Window_Closing(object sender, CancelEventArgs e)
@@ -66,7 +69,8 @@ namespace BlankScreen2.View
 			_Closing = true;
 			StopTimers();
 
-			await _BlankScreenModel.DisplayEntry.Screen.RestoreMonitorCapabilities();
+			if (_BlankScreenModel.TurnDownBrightnessContrast)
+				await _BlankScreenModel.DisplayEntry.Screen.RestoreMonitorCapabilities();
 		}
 
 		private void StopTimers()
@@ -104,7 +108,7 @@ namespace BlankScreen2.View
 			cm.Closed += Cm_Closed;
 			cm.IsOpen = true;
 
-			if (_BlankScreenModel.DisplayEntry.Screen.NeedsRestore())
+			if (_BlankScreenModel.DisplayEntry.Screen.NeedsRestore() && _BlankScreenModel.TurnDownBrightnessContrast)
 				await _BlankScreenModel.DisplayEntry.Screen.RestoreMonitorCapabilities();
 		}
 
@@ -172,7 +176,7 @@ namespace BlankScreen2.View
 				StartTimer(ref _MousePointerTimer, 5, MousePointerTimer_Tick);
 
 				ShowMouse(true);
-				if (_BlankScreenModel.DisplayEntry.Screen.NeedsRestore())
+				if (_BlankScreenModel.DisplayEntry.Screen.NeedsRestore() && _BlankScreenModel.TurnDownBrightnessContrast)
 					await _BlankScreenModel.DisplayEntry.Screen.RestoreMonitorCapabilities();
 			}
 		}

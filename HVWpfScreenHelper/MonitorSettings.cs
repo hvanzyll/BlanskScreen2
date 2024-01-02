@@ -3,7 +3,7 @@ using static HVWpfScreenHelper.NativeMethods;
 
 namespace HVWpfScreenHelper
 {
-	public class MonitorSettings
+	public class MonitorSettings : NotifyPropertyChanged
 	{
 		private readonly Screen _screen;
 		private NativeMethods.MonitorCapabilitiesMask monitorCababilities = MonitorCapabilitiesMask.MC_CAPS_NONE;
@@ -12,8 +12,29 @@ namespace HVWpfScreenHelper
 		private readonly BrightnessSettings brightnessSettings = new BrightnessSettings();
 		private readonly ContrastSettings contrastSettings = new ContrastSettings();
 
-		internal MonitorCapabilitiesMask MonitorCababilities { get => monitorCababilities; set => monitorCababilities = value; }
-		internal ColorTemperatureMask ColorTemperature { get => colorTemperature; set => colorTemperature = value; }
+		internal MonitorCapabilitiesMask MonitorCababilities
+		{
+			get => monitorCababilities;
+			set
+			{
+				SetField(ref monitorCababilities, value);
+				NotifyPropertyChanges(nameof(MC_CAPS_NONE));
+				NotifyPropertyChanges(nameof(MC_CAPS_MONITOR_TECHNOLOGY_TYPE));
+				NotifyPropertyChanges(nameof(MC_CAPS_BRIGHTNESS));
+				NotifyPropertyChanges(nameof(MC_CAPS_CONTRAST));
+				NotifyPropertyChanges(nameof(MC_CAPS_COLOR_TEMPERATURE));
+				NotifyPropertyChanges(nameof(MC_CAPS_RED_GREEN_BLUE_GAIN));
+				NotifyPropertyChanges(nameof(MC_CAPS_RED_GREEN_BLUE_DRIVE));
+				NotifyPropertyChanges(nameof(MC_CAPS_DEGAUSS));
+				NotifyPropertyChanges(nameof(MC_CAPS_DISPLAY_AREA_POSITION));
+				NotifyPropertyChanges(nameof(MC_CAPS_DISPLAY_AREA_SIZE));
+				NotifyPropertyChanges(nameof(MC_CAPS_RESTORE_FACTORY_DEFAULTS));
+				NotifyPropertyChanges(nameof(MC_CAPS_RESTORE_FACTORY_COLOR_DEFAULTS));
+				NotifyPropertyChanges(nameof(MC_RESTORE_FACTORY_DEFAULTS_ENABLES_MONITOR_SETTINGS));
+			}
+		}
+
+		internal ColorTemperatureMask ColorTemperature { get => colorTemperature; set => SetField(ref colorTemperature, value); }
 
 		//public bool MC_CAPS_NONE { get => (MonitorCapabilitiesMask.MC_CAPS_NONE & MonitorCababilities) == MonitorCapabilitiesMask.MC_CAPS_NONE; }
 		public bool MC_CAPS_NONE { get => MonitorCababilities == MonitorCapabilitiesMask.MC_CAPS_NONE; }

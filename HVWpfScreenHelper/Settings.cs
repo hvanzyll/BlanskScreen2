@@ -8,13 +8,16 @@
 		private int _currentBrightness;
 
 		public bool settingsSet { get; private set; } = false;
-		public int MinimumBrightness { get => _minimumBrightness; set => SetField(ref _minimumBrightness, value); }
-		public int MaximumBrightness { get => _maximumBrightness; set => SetField(ref _maximumBrightness, value); }
+		public int MinimumBrightness { get => _minimumBrightness; private set => SetField(ref _minimumBrightness, value); }
+		public int MaximumBrightness { get => _maximumBrightness; private set => SetField(ref _maximumBrightness, value); }
 		public int CurrentBrightness { get => _currentBrightness; set => SetField(ref _currentBrightness, value); }
 		public bool SettingsSet { get => _settingsSet; private set => SetField(ref _settingsSet, value); }
 
-		public void SetSettingsSet()
+		public void SetSettings(int min, int max, int curr)
 		{
+			MinimumBrightness = min;
+			MaximumBrightness = max;
+			CurrentBrightness = curr;
 			settingsSet = true;
 		}
 	}

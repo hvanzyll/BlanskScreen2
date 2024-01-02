@@ -5,9 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TestBrightness"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+
+        Title="Brightness Control" Height="450" Width="800" Loaded="Window_Loaded" SizeToContent="WidthAndHeight">
+
 	<Grid Margin="2">
-		<TabControl x:Name="tabControl" ItemsSource="{Binding MonitorSettings}" Margin="2">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="Auto" />
+		</Grid.ColumnDefinitions>
+
+		<TabControl x:Name="tabControl" Grid.Column="0" ItemsSource="{Binding MonitorSettings}" Margin="2">
 			<TabControl.ItemTemplate>
 				<DataTemplate>
 					<TextBlock Grid.Column="0" x:Name="_HeaderText" Text="{Binding DeviceName}" />
@@ -15,11 +22,10 @@
 			</TabControl.ItemTemplate>
 			<TabControl.ContentTemplate>
 				<DataTemplate>
-					<Grid>
-						<local:MonitorCapsCtrl x:Name="MonitorCapsCtrl" DataContext="{Binding}" />
-					</Grid>
 				</DataTemplate>
 			</TabControl.ContentTemplate>
 		</TabControl>
+
+		<local:WMIBrightnessCtrl x:Name="WMIBrightnessCtrl" Grid.Column="1" DataContext="{Binding}" />
 	</Grid>
 </Window>

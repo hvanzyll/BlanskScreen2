@@ -1,5 +1,6 @@
 ﻿using HVWpfScreenHelper;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using TestBrightness.Model;
 
@@ -19,16 +20,23 @@ namespace TestBrightness
 			this.DataContext = _MainData;
 		}
 
-		private void Window_Loaded(object sender, RoutedEventArgs e)
+		private async void Window_Loaded(object sender, RoutedEventArgs e)
 		{
-			IEnumerable<Screen> allScreens = Screen.AllScreens;
-			foreach (Screen screen in allScreens)
+			await Task.Run(() =>
 			{
-				screen.RefreshMonitorCapabilities();
-				screen.BackupMonitorCapabilities();
+				IEnumerable<Screen> allScreens = Screen.AllScreens;
 
-				_MainData.MonitorSettings.Add(screen.MonitorCapabilites);
-			}
+				foreach (Screen screen in allScreens)
+				{
+					Dispatcher.Invoke(() => _MainData.MonitorSettings.Add(screen.MonitorCapabilites));
+				};
+
+				Parallel.ForEach(allScreens, screen =>
+				{
+					screen.RefreshMonitorCapabilities();
+					screen.BackupMonitorCapabilities();
+				});
+			});
 		}
 	}
 }

@@ -348,10 +348,7 @@ namespace HVWpfScreenHelper
 			Debug.Assert(ret);
 			if (ret)
 			{
-				brightnessSettings.MinimumBrightness = pdwMinimumBrightness;
-				brightnessSettings.CurrentBrightness = pdwCurrentBrightness;
-				brightnessSettings.MaximumBrightness = pdwMaximumBrightness;
-				brightnessSettings.SetSettingsSet();
+				brightnessSettings.SetSettings(pdwMinimumBrightness, pdwCurrentBrightness, pdwMaximumBrightness);
 			}
 
 			return ret;

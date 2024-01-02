@@ -8,20 +8,23 @@
              d:DesignHeight="500" d:DesignWidth="400">
 	<Grid>
 		<StackPanel Margin="2">
-			<CheckBox x:Name="CAPS_NONE" Content="CAPS__NONE" IsChecked="{Binding  MC_CAPS_NONE, Mode=OneWay}" />
-			<CheckBox x:Name="CAPS_MONITOR_TECHNOLOGY_TYPE" Content="CAPS__MONITOR__TECHNOLOGY__TYPE" IsChecked="{Binding  MC_CAPS_MONITOR_TECHNOLOGY_TYPE, Mode=OneWay}" />
-			<CheckBox x:Name="CAPS_BRIGHTNESS" Content="CAPS__BRIGHTNESS" IsChecked="{Binding  MC_CAPS_BRIGHTNESS, Mode=OneWay}" />
-			<CheckBox x:Name="CAPS_CONTRAST" Content="CAPS__CONTRAST" IsChecked="{Binding  MC_CAPS_CONTRAST, Mode=OneWay}" />
-			<CheckBox x:Name="CAPS_COLOR_TEMPERATURE" Content="CAPS__COLOR__TEMPERATURE" IsChecked="{Binding  MC_CAPS_COLOR_TEMPERATURE, Mode=OneWay}" />
-			<CheckBox x:Name="CAPS_RED_GREEN_BLUE_GAIN" Content="CAPS__RED__GREEN__BLUE__GAIN" IsChecked="{Binding  MC_CAPS_RED_GREEN_BLUE_GAIN, Mode=OneWay}" />
-			<CheckBox x:Name="CAPS_RED_GREEN_BLUE_DRIVE" Content="CAPS__RED__GREEN__BLUE__DRIVE" IsChecked="{Binding  MC_CAPS_RED_GREEN_BLUE_DRIVE, Mode=OneWay}" />
-			<CheckBox x:Name="CAPS_DEGAUSS" Content="CAPS__DEGAUSS" IsChecked="{Binding  MC_CAPS_DEGAUSS, Mode=OneWay}" />
-			<CheckBox x:Name="CAPS_DISPLAY_AREA_POSITION" Content="CAPS__DISPLAY__AREA__POSITION" IsChecked="{Binding  MC_CAPS_DISPLAY_AREA_POSITION, Mode=OneWay}" />
-			<CheckBox x:Name="CAPS_DISPLAY_AREA_SIZE" Content="CAPS__DISPLAY__AREA__SIZE" IsChecked="{Binding  MC_CAPS_DISPLAY_AREA_SIZE, Mode=OneWay}" />
-			<CheckBox x:Name="CAPS_RESTORE_FACTORY_DEFAULTS" Content="CAPS__RESTORE__FACTORY__DEFAULTS" IsChecked="{Binding  MC_CAPS_RESTORE_FACTORY_DEFAULTS, Mode=OneWay}" />
-			<CheckBox x:Name="CAPS_RESTORE_FACTORY_COLOR_DEFAULTS" Content="CAPS__RESTORE__FACTORY__COLOR__DEFAULTS" IsChecked="{Binding  MC_CAPS_RESTORE_FACTORY_COLOR_DEFAULTS, Mode=OneWay}" />
-			<CheckBox x:Name="RESTORE_FACTORY_DEFAULTS_ENABLES_MONITOR_SETTINGS" Content="RESTORE__FACTORY__DEFAULTS__ENABLES__MONITOR__SETTINGS" IsChecked="{Binding  MC_RESTORE_FACTORY_DEFAULTS_ENABLES_MONITOR_SETTINGS, Mode=OneWay}" />
-
+			<GroupBox Header="Capabilities">
+				<StackPanel Margin="2" IsEnabled="False">
+					<CheckBox x:Name="CAPS_NONE" Content="CAPS__NONE" IsChecked="{Binding  MC_CAPS_NONE, Mode=OneWay}" />
+					<CheckBox x:Name="CAPS_MONITOR_TECHNOLOGY_TYPE" Content="CAPS__MONITOR__TECHNOLOGY__TYPE" IsChecked="{Binding  MC_CAPS_MONITOR_TECHNOLOGY_TYPE, Mode=OneWay}" />
+					<CheckBox x:Name="CAPS_BRIGHTNESS" Content="CAPS__BRIGHTNESS" IsChecked="{Binding  MC_CAPS_BRIGHTNESS, Mode=OneWay}" />
+					<CheckBox x:Name="CAPS_CONTRAST" Content="CAPS__CONTRAST" IsChecked="{Binding  MC_CAPS_CONTRAST, Mode=OneWay}" />
+					<CheckBox x:Name="CAPS_COLOR_TEMPERATURE" Content="CAPS__COLOR__TEMPERATURE" IsChecked="{Binding  MC_CAPS_COLOR_TEMPERATURE, Mode=OneWay}" />
+					<CheckBox x:Name="CAPS_RED_GREEN_BLUE_GAIN" Content="CAPS__RED__GREEN__BLUE__GAIN" IsChecked="{Binding  MC_CAPS_RED_GREEN_BLUE_GAIN, Mode=OneWay}" />
+					<CheckBox x:Name="CAPS_RED_GREEN_BLUE_DRIVE" Content="CAPS__RED__GREEN__BLUE__DRIVE" IsChecked="{Binding  MC_CAPS_RED_GREEN_BLUE_DRIVE, Mode=OneWay}" />
+					<CheckBox x:Name="CAPS_DEGAUSS" Content="CAPS__DEGAUSS" IsChecked="{Binding  MC_CAPS_DEGAUSS, Mode=OneWay}" />
+					<CheckBox x:Name="CAPS_DISPLAY_AREA_POSITION" Content="CAPS__DISPLAY__AREA__POSITION" IsChecked="{Binding  MC_CAPS_DISPLAY_AREA_POSITION, Mode=OneWay}" />
+					<CheckBox x:Name="CAPS_DISPLAY_AREA_SIZE" Content="CAPS__DISPLAY__AREA__SIZE" IsChecked="{Binding  MC_CAPS_DISPLAY_AREA_SIZE, Mode=OneWay}" />
+					<CheckBox x:Name="CAPS_RESTORE_FACTORY_DEFAULTS" Content="CAPS__RESTORE__FACTORY__DEFAULTS" IsChecked="{Binding  MC_CAPS_RESTORE_FACTORY_DEFAULTS, Mode=OneWay}" />
+					<CheckBox x:Name="CAPS_RESTORE_FACTORY_COLOR_DEFAULTS" Content="CAPS__RESTORE__FACTORY__COLOR__DEFAULTS" IsChecked="{Binding  MC_CAPS_RESTORE_FACTORY_COLOR_DEFAULTS, Mode=OneWay}" />
+					<CheckBox x:Name="RESTORE_FACTORY_DEFAULTS_ENABLES_MONITOR_SETTINGS" Content="RESTORE__FACTORY__DEFAULTS__ENABLES__MONITOR__SETTINGS" IsChecked="{Binding  MC_RESTORE_FACTORY_DEFAULTS_ENABLES_MONITOR_SETTINGS, Mode=OneWay}" />
+				</StackPanel>
+			</GroupBox>
 			<GroupBox Header="Brightness Settings" DataContext="{Binding BrightnessSettings}" IsEnabled="{Binding BrightnessSettings.SettingsSet}">
 				<Grid>
 					<Grid.ColumnDefinitions>
@@ -35,10 +38,10 @@
 						<RowDefinition Height="Auto" />
 					</Grid.RowDefinitions>
 					<TextBlock Grid.Column="0" Grid.Row="0" Text="Min:" Margin="2" />
-					<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding MinimumBrightness}" Margin="2" />
+					<TextBox Grid.Column="1" Grid.Row="0" Text="{Binding MinimumBrightness, Mode=OneWay}" Margin="2" />
 
 					<TextBlock Grid.Column="0" Grid.Row="1" Text="Max:" Margin="2" />
-					<TextBox Grid.Column="1" Grid.Row="1" Text="{Binding MaximumBrightness}" Margin="2" />
+					<TextBox Grid.Column="1" Grid.Row="1" Text="{Binding MaximumBrightness, Mode=OneWay}" Margin="2" />
 
 					<TextBlock Grid.Column="0" Grid.Row="2" Text="Current:" Margin="2" />
 					<TextBox Grid.Column="1" Grid.Row="2" Text="{Binding CurrentBrightness}" Margin="2" />
